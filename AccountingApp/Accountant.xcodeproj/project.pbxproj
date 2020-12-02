@@ -1,0 +1,1519 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 51;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		522318B0EE4F539BA11D8AFE /* Pods_Accountant.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 47268BE9267E04BF5DFFF33F /* Pods_Accountant.framework */; };
+		9BDB671CB0D8BBA854E16604 /* Pods_AccountantTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CBC6138EA740D75AAB1DD259 /* Pods_AccountantTests.framework */; };
+		F57BFBC12EF00163D781E050 /* Pods_Accountant_AccountantUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF36BAF969D04BE9BB741A1D /* Pods_Accountant_AccountantUITests.framework */; };
+		F90114142412A02F009DBE2F /* DataBaseJournalEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = F90114132412A02F009DBE2F /* DataBaseJournalEntry.swift */; };
+		F907D3412521D080003B2556 /* DataBaseSettingsTaxonomy.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9F4606624C44C8F008FE62B /* DataBaseSettingsTaxonomy.swift */; };
+		F919603224AC53890084A18B /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = F919603124AC53890084A18B /* File.swift */; };
+		F91F6E2D248A1259003C3F5D /* DataBaseManagerAccountingBooksShelf.swift in Sources */ = {isa = PBXBuildFile; fileRef = F91F6E2C248A1259003C3F5D /* DataBaseManagerAccountingBooksShelf.swift */; };
+		F929C00B247708CF0034FAAF /* MasterData.swift in Sources */ = {isa = PBXBuildFile; fileRef = F929C00A247708CF0034FAAF /* MasterData.swift */; };
+		F929C0232478361F0034FAAF /* DataBaseSettingsTaxonomyAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9134C292476E987002A0F77 /* DataBaseSettingsTaxonomyAccount.swift */; };
+		F929C0242478361F0034FAAF /* DatabaseManagerSettingsTaxonomyAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9134C272476E8CF002A0F77 /* DatabaseManagerSettingsTaxonomyAccount.swift */; };
+		F92EA9382428B18100B721C3 /* ViewControllerJournalEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = F92EA9372428B18100B721C3 /* ViewControllerJournalEntry.swift */; };
+		F92F4EF4249CCD5B00D50767 /* ViewControllerTB.swift in Sources */ = {isa = PBXBuildFile; fileRef = F92F4EF3249CCD5B00D50767 /* ViewControllerTB.swift */; };
+		F9354DB224989895007DB098 /* DataBaseManagerTB.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9354DB124989895007DB098 /* DataBaseManagerTB.swift */; };
+		F9354DB424989BAA007DB098 /* DataBaseTrialBalance.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9354DB324989BAA007DB098 /* DataBaseTrialBalance.swift */; };
+		F9354DB62498A361007DB098 /* DataBaseFinancialStatements.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9354DB52498A361007DB098 /* DataBaseFinancialStatements.swift */; };
+		F9354DB82498C7C8007DB098 /* DataBaseCompoundTrialBalance.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9354DB72498C7C8007DB098 /* DataBaseCompoundTrialBalance.swift */; };
+		F9354DBB2498DDF4007DB098 /* DataBaseWorkSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9354DBA2498DDF4007DB098 /* DataBaseWorkSheet.swift */; };
+		F9354DBD2498E5D3007DB098 /* DataBaseAdjustingEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9354DBC2498E5D3007DB098 /* DataBaseAdjustingEntry.swift */; };
+		F9354DC02498F730007DB098 /* DataBaseProfitAndLossStatement.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9354DBF2498F730007DB098 /* DataBaseProfitAndLossStatement.swift */; };
+		F9354DC32498FEB5007DB098 /* DataBaseCashFlowStatement.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9354DC22498FEB5007DB098 /* DataBaseCashFlowStatement.swift */; };
+		F9354DC524990AB4007DB098 /* DataBaseManagerFinancialStatements.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9354DC424990AB4007DB098 /* DataBaseManagerFinancialStatements.swift */; };
+		F93A630024FA79A400C1C2C1 /* DataBaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F93A62FF24FA79A400C1C2C1 /* DataBaseManager.swift */; };
+		F93A630224FA8AFC00C1C2C1 /* DataBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = F93A630124FA8AFC00C1C2C1 /* DataBase.swift */; };
+		F94EDD93237AEB3A0074D812 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F94EDD92237AEB3A0074D812 /* AppDelegate.swift */; };
+		F94EDD95237AEB3A0074D812 /* DocumentBrowserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F94EDD94237AEB3A0074D812 /* DocumentBrowserViewController.swift */; };
+		F94EDD97237AEB3A0074D812 /* DocumentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F94EDD96237AEB3A0074D812 /* DocumentView.swift */; };
+		F94EDD99237AEB3A0074D812 /* Document.swift in Sources */ = {isa = PBXBuildFile; fileRef = F94EDD98237AEB3A0074D812 /* Document.swift */; };
+		F94EDD9C237AEB3A0074D812 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F94EDD9A237AEB3A0074D812 /* Main.storyboard */; };
+		F94EDD9E237AEB3B0074D812 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F94EDD9D237AEB3B0074D812 /* Assets.xcassets */; };
+		F94EDDA1237AEB3B0074D812 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F94EDD9F237AEB3B0074D812 /* LaunchScreen.storyboard */; };
+		F94EDDAC237AEB3C0074D812 /* AccountantTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F94EDDAB237AEB3C0074D812 /* AccountantTests.swift */; };
+		F94EDDB7237AEB3C0074D812 /* AccountantUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F94EDDB6237AEB3C0074D812 /* AccountantUITests.swift */; };
+		F955B607248FE6EF005E2C6D /* TableViewControllerFinancialStatement.swift in Sources */ = {isa = PBXBuildFile; fileRef = F955B606248FE6EF005E2C6D /* TableViewControllerFinancialStatement.swift */; };
+		F955B60A2490E31E005E2C6D /* TableViewControllerPL.swift in Sources */ = {isa = PBXBuildFile; fileRef = F955B6092490E31E005E2C6D /* TableViewControllerPL.swift */; };
+		F955B60C2490FB77005E2C6D /* TableViewControllerBS.swift in Sources */ = {isa = PBXBuildFile; fileRef = F955B60B2490FB77005E2C6D /* TableViewControllerBS.swift */; };
+		F955B6112490FD3E005E2C6D /* TableViewControllerCF.swift in Sources */ = {isa = PBXBuildFile; fileRef = F955B6102490FD3E005E2C6D /* TableViewControllerCF.swift */; };
+		F95A8C952552A0D900789B0D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F95A8C942552A0D900789B0D /* GoogleService-Info.plist */; };
+		F966D827255D1729009BD18F /* DataBaseManagerTaxonomy.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9F4606424C437F1008FE62B /* DataBaseManagerTaxonomy.swift */; };
+		F966D828255D1732009BD18F /* DataBaseTaxonomy.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9F4606024C280DF008FE62B /* DataBaseTaxonomy.swift */; };
+		F9706849252ACD38003307F8 /* DataBaseManagerPLAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9706848252ACD38003307F8 /* DataBaseManagerPLAccount.swift */; };
+		F9711329249D12A1006258F7 /* TableViewCellTB.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9711328249D12A1006258F7 /* TableViewCellTB.swift */; };
+		F973981524A99D5F00A05C5F /* TableViewCellAmount.swift in Sources */ = {isa = PBXBuildFile; fileRef = F973981424A99D5F00A05C5F /* TableViewCellAmount.swift */; };
+		F97422E0253F091500FBA052 /* PickerTextFieldAccountDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = F97422DA253F091500FBA052 /* PickerTextFieldAccountDetail.swift */; };
+		F976798D24A8904B007A0D73 /* DataBaseManagerPL.swift in Sources */ = {isa = PBXBuildFile; fileRef = F976798C24A8904B007A0D73 /* DataBaseManagerPL.swift */; };
+		F9789A342475C49B00B62CAF /* TableViewControllerSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9789A332475C49B00B62CAF /* TableViewControllerSettings.swift */; };
+		F98CD96C24DCB071001CBF94 /* TableViewCellCategoryList.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9134C252476BCE6002A0F77 /* TableViewCellCategoryList.swift */; };
+		F98CD96D24DCB077001CBF94 /* TableViewControllerCategoryList.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9134C232476BC25002A0F77 /* TableViewControllerCategoryList.swift */; };
+		F98CD97224DCB1CC001CBF94 /* TableViewControllerSettingsGroups.swift in Sources */ = {isa = PBXBuildFile; fileRef = F98CD96F24DCB13E001CBF94 /* TableViewControllerSettingsGroups.swift */; };
+		F98CD97724DCB49D001CBF94 /* TableViewControllerSettingsCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = F98CD95F24DCA2C0001CBF94 /* TableViewControllerSettingsCategory.swift */; };
+		F99112DF249514DB00E28BB9 /* TableViewCellTotalOfMiddleCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = F99112DE249514DB00E28BB9 /* TableViewCellTotalOfMiddleCategory.swift */; };
+		F99112E124951F8700E28BB9 /* TableViewCellTotalOfBigCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = F99112E024951F8700E28BB9 /* TableViewCellTotalOfBigCategory.swift */; };
+		F99112E42495290000E28BB9 /* DataBaseManagerBS.swift in Sources */ = {isa = PBXBuildFile; fileRef = F99112E32495290000E28BB9 /* DataBaseManagerBS.swift */; };
+		F99112E624952EA100E28BB9 /* DataBaseBalanceSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = F99112E524952EA100E28BB9 /* DataBaseBalanceSheet.swift */; };
+		F99B65BD24B781E3006BD3DD /* ViewControllerWS.swift in Sources */ = {isa = PBXBuildFile; fileRef = F99B65BC24B781E3006BD3DD /* ViewControllerWS.swift */; };
+		F99B65BF24B7A38F006BD3DD /* TableViewCellWS.swift in Sources */ = {isa = PBXBuildFile; fileRef = F99B65BE24B7A38F006BD3DD /* TableViewCellWS.swift */; };
+		F99CF35B251B2D18004295DE /* taxonomy.csv in Resources */ = {isa = PBXBuildFile; fileRef = F99CF359251B2D18004295DE /* taxonomy.csv */; };
+		F99EDE0D246C00B100334FF4 /* DataBaseManagerJournalEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = F99EDE0C246C00B100334FF4 /* DataBaseManagerJournalEntry.swift */; };
+		F9AAB36224941F1A00AB2FBD /* TableViewCellAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9AAB36124941F1A00AB2FBD /* TableViewCellAccount.swift */; };
+		F9BEED0E2566F56400678391 /* AnnotationViewControllerJournals.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9BEED0D2566F56400678391 /* AnnotationViewControllerJournals.swift */; };
+		F9BEED102566FB3900678391 /* AnnotationViewControllerSettingPeriod.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9BEED0F2566FB3900678391 /* AnnotationViewControllerSettingPeriod.swift */; };
+		F9BEED12256704A800678391 /* AnnotationViewControllerSettingsCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9BEED11256704A800678391 /* AnnotationViewControllerSettingsCategory.swift */; };
+		F9BEED1425671D6700678391 /* AnnotationViewControllerSettingsInformation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9BEED1325671D6700678391 /* AnnotationViewControllerSettingsInformation.swift */; };
+		F9BF067D24289DC700C59031 /* TableViewControllerGeneralLedger.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9BF067C24289DC700C59031 /* TableViewControllerGeneralLedger.swift */; };
+		F9C2BEBA250C9E8500825936 /* TableViewControllerSettingsTaxonomyAccountByTaxonomyList.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9C2BEB9250C9E8500825936 /* TableViewControllerSettingsTaxonomyAccountByTaxonomyList.swift */; };
+		F9C2BEBD250CCF9E00825936 /* TableViewControllerSettingsTaxonomyList.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9C2BEBC250CCF9E00825936 /* TableViewControllerSettingsTaxonomyList.swift */; };
+		F9CF22E52424F46500572070 /* TableViewControllerJournals.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9CF22E42424F46500572070 /* TableViewControllerJournals.swift */; };
+		F9CF22E72425016E00572070 /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9CF22E62425016E00572070 /* TableViewCell.swift */; };
+		F9D08D8D25444CF700CE3CB2 /* TableViewCellSettingAccountDetailAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = F97422D9253F091500FBA052 /* TableViewCellSettingAccountDetailAccount.swift */; };
+		F9D08D8E25444CF700CE3CB2 /* TableViewCellSettingAccountDetailTaxonomy.swift in Sources */ = {isa = PBXBuildFile; fileRef = F97422D8253F091500FBA052 /* TableViewCellSettingAccountDetailTaxonomy.swift */; };
+		F9D08D8F25444D2100CE3CB2 /* TableViewCellSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9789A352475CA8000B62CAF /* TableViewCellSettings.swift */; };
+		F9D08D9125444E8800CE3CB2 /* TableViewControllerSettingsCategoryDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9D08D9025444E8800CE3CB2 /* TableViewControllerSettingsCategoryDetail.swift */; };
+		F9D08D9325444EA500CE3CB2 /* TableViewCellSettingAccountDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9D08D9225444EA500CE3CB2 /* TableViewCellSettingAccountDetail.swift */; };
+		F9D224C62489208D006C6CD9 /* DataBaseManagerPeriod.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9D224C52489208D006C6CD9 /* DataBaseManagerPeriod.swift */; };
+		F9D224C924893F61006C6CD9 /* DataBaseAccountingBooksShelf.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9D224C824893F61006C6CD9 /* DataBaseAccountingBooksShelf.swift */; };
+		F9D224CC24894493006C6CD9 /* DataBaseSubsidiaryLedger.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9D224CB24894493006C6CD9 /* DataBaseSubsidiaryLedger.swift */; };
+		F9D34FB7248A324A00F8B403 /* ViewControllerSettingsPeriodYear.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9D34FB6248A324A00F8B403 /* ViewControllerSettingsPeriodYear.swift */; };
+		F9D5D544247E2E7900EA35C7 /* TableViewCellGeneralLedgerAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9D5D543247E2E7900EA35C7 /* TableViewCellGeneralLedgerAccount.swift */; };
+		F9D5D54A247E408C00EA35C7 /* ViewControllerGenearlLedgerAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9D5D549247E408C00EA35C7 /* ViewControllerGenearlLedgerAccount.swift */; };
+		F9D5D54D247E48D600EA35C7 /* DataBaseManagerAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9D5D54C247E48D600EA35C7 /* DataBaseManagerAccount.swift */; };
+		F9D5D54F247E783C00EA35C7 /* TableViewCellGeneralLedger.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9D5D54E247E783C00EA35C7 /* TableViewCellGeneralLedger.swift */; };
+		F9E53C24247F9E6B007C2F66 /* DataBaseManagerGeneralLedgerAccountBalance.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9E53C23247F9E6B007C2F66 /* DataBaseManagerGeneralLedgerAccountBalance.swift */; };
+		F9E620FC2565281600C2C3B3 /* AnnotationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9E620FB2565281600C2C3B3 /* AnnotationViewController.swift */; };
+		F9E620FE25656A9A00C2C3B3 /* AnnotationViewControllerJournalEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9E620FD25656A9A00C2C3B3 /* AnnotationViewControllerJournalEntry.swift */; };
+		F9F26EFF24D6C1DC00241DB4 /* DataBaseManagerWS.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9F26EFE24D6C1DC00241DB4 /* DataBaseManagerWS.swift */; };
+		F9F4605424BDD616008FE62B /* Migration.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9F4605324BDD616008FE62B /* Migration.swift */; };
+		F9F4607424C9E0BD008FE62B /* File2.swift in Sources */ = {isa = PBXBuildFile; fileRef = F919603324AC679E0084A18B /* File2.swift */; };
+		F9F4607724D04F8F008FE62B /* TableViewControllerSettingsInformation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9F4607624D04F8F008FE62B /* TableViewControllerSettingsInformation.swift */; };
+		F9F4607924D06F6C008FE62B /* TableViewCellCompanyName.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9F4607824D06F6C008FE62B /* TableViewCellCompanyName.swift */; };
+		F9F4607B24D1A61A008FE62B /* DataBaseManagerSettingsTaxonomy.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9F4606824C82F74008FE62B /* DataBaseManagerSettingsTaxonomy.swift */; };
+		F9F4608124D1ED15008FE62B /* PickerTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9F4608024D1ED15008FE62B /* PickerTextField.swift */; };
+		F9F934E12484C40400BF7AA7 /* DataBaseAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9F934E02484C40400BF7AA7 /* DataBaseAccount.swift */; };
+		F9F934E32484D53100BF7AA7 /* DataBaseJournals.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9F934E22484D53100BF7AA7 /* DataBaseJournals.swift */; };
+		F9F934E52484D59900BF7AA7 /* DataBaseManagerJournals.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9F934E42484D59900BF7AA7 /* DataBaseManagerJournals.swift */; };
+		F9F934E72484E79100BF7AA7 /* DataBaseManagerGeneralLedger.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9F934E62484E79100BF7AA7 /* DataBaseManagerGeneralLedger.swift */; };
+		F9F934E92484E7BD00BF7AA7 /* DataBaseGeneralLedger.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9F934E82484E7BD00BF7AA7 /* DataBaseGeneralLedger.swift */; };
+		F9F934EC248554DA00BF7AA7 /* TableViewControllerSettingsPeriod.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9F934EB248554DA00BF7AA7 /* TableViewControllerSettingsPeriod.swift */; };
+		F9F934EF2485578900BF7AA7 /* Initial.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9F934EE2485578900BF7AA7 /* Initial.swift */; };
+		F9F934F82485EE3C00BF7AA7 /* DataBaseAccountingBooks.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9F934F72485EE3C00BF7AA7 /* DataBaseAccountingBooks.swift */; };
+		F9F934FA2485F21400BF7AA7 /* DataBaseManagerAccountingBooks.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9F934F92485F21400BF7AA7 /* DataBaseManagerAccountingBooks.swift */; };
+		F9FF9AB825317A0D00FB06BB /* TaxonomyAccount.csv in Resources */ = {isa = PBXBuildFile; fileRef = F9FF9AB725317A0D00FB06BB /* TaxonomyAccount.csv */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		F94EDDA8237AEB3B0074D812 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F94EDD87237AEB3A0074D812 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F94EDD8E237AEB3A0074D812;
+			remoteInfo = Accountant;
+		};
+		F94EDDB3237AEB3C0074D812 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F94EDD87237AEB3A0074D812 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F94EDD8E237AEB3A0074D812;
+			remoteInfo = Accountant;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		0607E6C6A3527AD59D0F557D /* Pods-Accountant.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Accountant.release.xcconfig"; path = "Target Support Files/Pods-Accountant/Pods-Accountant.release.xcconfig"; sourceTree = "<group>"; };
+		1F51C0A378B805DC283D9A49 /* Pods-Accountant-AccountantUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Accountant-AccountantUITests.release.xcconfig"; path = "Target Support Files/Pods-Accountant-AccountantUITests/Pods-Accountant-AccountantUITests.release.xcconfig"; sourceTree = "<group>"; };
+		3947D5A43F0563FFA12C14FA /* Pods-AccountantTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AccountantTests.debug.xcconfig"; path = "Target Support Files/Pods-AccountantTests/Pods-AccountantTests.debug.xcconfig"; sourceTree = "<group>"; };
+		47268BE9267E04BF5DFFF33F /* Pods_Accountant.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Accountant.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		83B54E7192BB1D0790175288 /* Pods-Accountant-AccountantUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Accountant-AccountantUITests.debug.xcconfig"; path = "Target Support Files/Pods-Accountant-AccountantUITests/Pods-Accountant-AccountantUITests.debug.xcconfig"; sourceTree = "<group>"; };
+		84DA037E2BAF912127067D70 /* Pods-Accountant.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Accountant.debug.xcconfig"; path = "Target Support Files/Pods-Accountant/Pods-Accountant.debug.xcconfig"; sourceTree = "<group>"; };
+		CBC6138EA740D75AAB1DD259 /* Pods_AccountantTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AccountantTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E4E5E538AD3BB3474BDA9AF2 /* Pods-AccountantTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AccountantTests.release.xcconfig"; path = "Target Support Files/Pods-AccountantTests/Pods-AccountantTests.release.xcconfig"; sourceTree = "<group>"; };
+		F90114132412A02F009DBE2F /* DataBaseJournalEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataBaseJournalEntry.swift; sourceTree = "<group>"; };
+		F9134C232476BC25002A0F77 /* TableViewControllerCategoryList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewControllerCategoryList.swift; sourceTree = "<group>"; };
+		F9134C252476BCE6002A0F77 /* TableViewCellCategoryList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewCellCategoryList.swift; sourceTree = "<group>"; };
+		F9134C272476E8CF002A0F77 /* DatabaseManagerSettingsTaxonomyAccount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseManagerSettingsTaxonomyAccount.swift; sourceTree = "<group>"; };
+		F9134C292476E987002A0F77 /* DataBaseSettingsTaxonomyAccount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataBaseSettingsTaxonomyAccount.swift; sourceTree = "<group>"; };
+		F919603124AC53890084A18B /* File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
+		F919603324AC679E0084A18B /* File2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = File2.swift; sourceTree = "<group>"; };
+		F91F6E2C248A1259003C3F5D /* DataBaseManagerAccountingBooksShelf.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataBaseManagerAccountingBooksShelf.swift; sourceTree = "<group>"; };
+		F929C00A247708CF0034FAAF /* MasterData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasterData.swift; sourceTree = "<group>"; };
+		F92EA9372428B18100B721C3 /* ViewControllerJournalEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewControllerJournalEntry.swift; sourceTree = "<group>"; };
+		F92F4EF3249CCD5B00D50767 /* ViewControllerTB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewControllerTB.swift; sourceTree = "<group>"; };
+		F9354DB124989895007DB098 /* DataBaseManagerTB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataBaseManagerTB.swift; sourceTree = "<group>"; };
+		F9354DB324989BAA007DB098 /* DataBaseTrialBalance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataBaseTrialBalance.swift; sourceTree = "<group>"; };
+		F9354DB52498A361007DB098 /* DataBaseFinancialStatements.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataBaseFinancialStatements.swift; sourceTree = "<group>"; };
+		F9354DB72498C7C8007DB098 /* DataBaseCompoundTrialBalance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataBaseCompoundTrialBalance.swift; sourceTree = "<group>"; };
+		F9354DBA2498DDF4007DB098 /* DataBaseWorkSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataBaseWorkSheet.swift; sourceTree = "<group>"; };
+		F9354DBC2498E5D3007DB098 /* DataBaseAdjustingEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataBaseAdjustingEntry.swift; sourceTree = "<group>"; };
+		F9354DBF2498F730007DB098 /* DataBaseProfitAndLossStatement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataBaseProfitAndLossStatement.swift; sourceTree = "<group>"; };
+		F9354DC22498FEB5007DB098 /* DataBaseCashFlowStatement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataBaseCashFlowStatement.swift; sourceTree = "<group>"; };
+		F9354DC424990AB4007DB098 /* DataBaseManagerFinancialStatements.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataBaseManagerFinancialStatements.swift; sourceTree = "<group>"; };
+		F93A62FF24FA79A400C1C2C1 /* DataBaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataBaseManager.swift; sourceTree = "<group>"; };
+		F93A630124FA8AFC00C1C2C1 /* DataBase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataBase.swift; sourceTree = "<group>"; };
+		F94EDD8F237AEB3A0074D812 /* Accounting book.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Accounting book.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		F94EDD92237AEB3A0074D812 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		F94EDD94237AEB3A0074D812 /* DocumentBrowserViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentBrowserViewController.swift; sourceTree = "<group>"; };
+		F94EDD96237AEB3A0074D812 /* DocumentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentView.swift; sourceTree = "<group>"; };
+		F94EDD98237AEB3A0074D812 /* Document.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Document.swift; sourceTree = "<group>"; };
+		F94EDD9B237AEB3A0074D812 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		F94EDD9D237AEB3B0074D812 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		F94EDDA0237AEB3B0074D812 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		F94EDDA2237AEB3B0074D812 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F94EDDA7237AEB3B0074D812 /* AccountantTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AccountantTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		F94EDDAB237AEB3C0074D812 /* AccountantTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountantTests.swift; sourceTree = "<group>"; };
+		F94EDDAD237AEB3C0074D812 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F94EDDB2237AEB3C0074D812 /* AccountantUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AccountantUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		F94EDDB6237AEB3C0074D812 /* AccountantUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountantUITests.swift; sourceTree = "<group>"; };
+		F94EDDB8237AEB3C0074D812 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F955B606248FE6EF005E2C6D /* TableViewControllerFinancialStatement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TableViewControllerFinancialStatement.swift; path = Accountant/FinancialStatement/TableViewControllerFinancialStatement.swift; sourceTree = SOURCE_ROOT; };
+		F955B6092490E31E005E2C6D /* TableViewControllerPL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewControllerPL.swift; sourceTree = "<group>"; };
+		F955B60B2490FB77005E2C6D /* TableViewControllerBS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewControllerBS.swift; sourceTree = "<group>"; };
+		F955B6102490FD3E005E2C6D /* TableViewControllerCF.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewControllerCF.swift; sourceTree = "<group>"; };
+		F95A8C942552A0D900789B0D /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		F9706848252ACD38003307F8 /* DataBaseManagerPLAccount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataBaseManagerPLAccount.swift; sourceTree = "<group>"; };
+		F9711328249D12A1006258F7 /* TableViewCellTB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewCellTB.swift; sourceTree = "<group>"; };
+		F973981424A99D5F00A05C5F /* TableViewCellAmount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewCellAmount.swift; sourceTree = "<group>"; };
+		F97422D8253F091500FBA052 /* TableViewCellSettingAccountDetailTaxonomy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewCellSettingAccountDetailTaxonomy.swift; sourceTree = "<group>"; };
+		F97422D9253F091500FBA052 /* TableViewCellSettingAccountDetailAccount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewCellSettingAccountDetailAccount.swift; sourceTree = "<group>"; };
+		F97422DA253F091500FBA052 /* PickerTextFieldAccountDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickerTextFieldAccountDetail.swift; sourceTree = "<group>"; };
+		F976798C24A8904B007A0D73 /* DataBaseManagerPL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataBaseManagerPL.swift; sourceTree = "<group>"; };
+		F9789A332475C49B00B62CAF /* TableViewControllerSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewControllerSettings.swift; sourceTree = "<group>"; };
+		F9789A352475CA8000B62CAF /* TableViewCellSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewCellSettings.swift; sourceTree = "<group>"; };
+		F98CD95F24DCA2C0001CBF94 /* TableViewControllerSettingsCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TableViewControllerSettingsCategory.swift; path = Accountant/Settings/SettingsCategory/SettingsCategoryMain/TableViewControllerSettingsCategory.swift; sourceTree = SOURCE_ROOT; };
+		F98CD96F24DCB13E001CBF94 /* TableViewControllerSettingsGroups.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewControllerSettingsGroups.swift; sourceTree = "<group>"; };
+		F99112DE249514DB00E28BB9 /* TableViewCellTotalOfMiddleCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewCellTotalOfMiddleCategory.swift; sourceTree = "<group>"; };
+		F99112E024951F8700E28BB9 /* TableViewCellTotalOfBigCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewCellTotalOfBigCategory.swift; sourceTree = "<group>"; };
+		F99112E32495290000E28BB9 /* DataBaseManagerBS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataBaseManagerBS.swift; sourceTree = "<group>"; };
+		F99112E524952EA100E28BB9 /* DataBaseBalanceSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataBaseBalanceSheet.swift; sourceTree = "<group>"; };
+		F99B65BC24B781E3006BD3DD /* ViewControllerWS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewControllerWS.swift; sourceTree = "<group>"; };
+		F99B65BE24B7A38F006BD3DD /* TableViewCellWS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewCellWS.swift; sourceTree = "<group>"; };
+		F99CF359251B2D18004295DE /* taxonomy.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = taxonomy.csv; sourceTree = "<group>"; };
+		F99EDE0C246C00B100334FF4 /* DataBaseManagerJournalEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataBaseManagerJournalEntry.swift; sourceTree = "<group>"; };
+		F9AAB36124941F1A00AB2FBD /* TableViewCellAccount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewCellAccount.swift; sourceTree = "<group>"; };
+		F9BEED0D2566F56400678391 /* AnnotationViewControllerJournals.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationViewControllerJournals.swift; sourceTree = "<group>"; };
+		F9BEED0F2566FB3900678391 /* AnnotationViewControllerSettingPeriod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationViewControllerSettingPeriod.swift; sourceTree = "<group>"; };
+		F9BEED11256704A800678391 /* AnnotationViewControllerSettingsCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationViewControllerSettingsCategory.swift; sourceTree = "<group>"; };
+		F9BEED1325671D6700678391 /* AnnotationViewControllerSettingsInformation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationViewControllerSettingsInformation.swift; sourceTree = "<group>"; };
+		F9BF067C24289DC700C59031 /* TableViewControllerGeneralLedger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewControllerGeneralLedger.swift; sourceTree = "<group>"; };
+		F9C2BEB9250C9E8500825936 /* TableViewControllerSettingsTaxonomyAccountByTaxonomyList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewControllerSettingsTaxonomyAccountByTaxonomyList.swift; sourceTree = "<group>"; };
+		F9C2BEBC250CCF9E00825936 /* TableViewControllerSettingsTaxonomyList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewControllerSettingsTaxonomyList.swift; sourceTree = "<group>"; };
+		F9CF22E42424F46500572070 /* TableViewControllerJournals.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewControllerJournals.swift; sourceTree = "<group>"; };
+		F9CF22E62425016E00572070 /* TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
+		F9D08D9025444E8800CE3CB2 /* TableViewControllerSettingsCategoryDetail.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewControllerSettingsCategoryDetail.swift; sourceTree = "<group>"; };
+		F9D08D9225444EA500CE3CB2 /* TableViewCellSettingAccountDetail.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewCellSettingAccountDetail.swift; sourceTree = "<group>"; };
+		F9D224C52489208D006C6CD9 /* DataBaseManagerPeriod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataBaseManagerPeriod.swift; sourceTree = "<group>"; };
+		F9D224C824893F61006C6CD9 /* DataBaseAccountingBooksShelf.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataBaseAccountingBooksShelf.swift; sourceTree = "<group>"; };
+		F9D224CB24894493006C6CD9 /* DataBaseSubsidiaryLedger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataBaseSubsidiaryLedger.swift; sourceTree = "<group>"; };
+		F9D34FB6248A324A00F8B403 /* ViewControllerSettingsPeriodYear.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewControllerSettingsPeriodYear.swift; sourceTree = "<group>"; };
+		F9D5D543247E2E7900EA35C7 /* TableViewCellGeneralLedgerAccount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewCellGeneralLedgerAccount.swift; sourceTree = "<group>"; };
+		F9D5D549247E408C00EA35C7 /* ViewControllerGenearlLedgerAccount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewControllerGenearlLedgerAccount.swift; sourceTree = "<group>"; };
+		F9D5D54C247E48D600EA35C7 /* DataBaseManagerAccount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataBaseManagerAccount.swift; sourceTree = "<group>"; };
+		F9D5D54E247E783C00EA35C7 /* TableViewCellGeneralLedger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewCellGeneralLedger.swift; sourceTree = "<group>"; };
+		F9E53C23247F9E6B007C2F66 /* DataBaseManagerGeneralLedgerAccountBalance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataBaseManagerGeneralLedgerAccountBalance.swift; sourceTree = "<group>"; };
+		F9E620FB2565281600C2C3B3 /* AnnotationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationViewController.swift; sourceTree = "<group>"; };
+		F9E620FD25656A9A00C2C3B3 /* AnnotationViewControllerJournalEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationViewControllerJournalEntry.swift; sourceTree = "<group>"; };
+		F9F26EFE24D6C1DC00241DB4 /* DataBaseManagerWS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataBaseManagerWS.swift; sourceTree = "<group>"; };
+		F9F4605324BDD616008FE62B /* Migration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Migration.swift; sourceTree = "<group>"; };
+		F9F4606024C280DF008FE62B /* DataBaseTaxonomy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataBaseTaxonomy.swift; sourceTree = "<group>"; };
+		F9F4606424C437F1008FE62B /* DataBaseManagerTaxonomy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataBaseManagerTaxonomy.swift; sourceTree = "<group>"; };
+		F9F4606624C44C8F008FE62B /* DataBaseSettingsTaxonomy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataBaseSettingsTaxonomy.swift; sourceTree = "<group>"; };
+		F9F4606824C82F74008FE62B /* DataBaseManagerSettingsTaxonomy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataBaseManagerSettingsTaxonomy.swift; sourceTree = "<group>"; };
+		F9F4607624D04F8F008FE62B /* TableViewControllerSettingsInformation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewControllerSettingsInformation.swift; sourceTree = "<group>"; };
+		F9F4607824D06F6C008FE62B /* TableViewCellCompanyName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewCellCompanyName.swift; sourceTree = "<group>"; };
+		F9F4608024D1ED15008FE62B /* PickerTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickerTextField.swift; sourceTree = "<group>"; };
+		F9F934E02484C40400BF7AA7 /* DataBaseAccount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataBaseAccount.swift; sourceTree = "<group>"; };
+		F9F934E22484D53100BF7AA7 /* DataBaseJournals.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataBaseJournals.swift; sourceTree = "<group>"; };
+		F9F934E42484D59900BF7AA7 /* DataBaseManagerJournals.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataBaseManagerJournals.swift; sourceTree = "<group>"; };
+		F9F934E62484E79100BF7AA7 /* DataBaseManagerGeneralLedger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataBaseManagerGeneralLedger.swift; sourceTree = "<group>"; };
+		F9F934E82484E7BD00BF7AA7 /* DataBaseGeneralLedger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataBaseGeneralLedger.swift; sourceTree = "<group>"; };
+		F9F934EB248554DA00BF7AA7 /* TableViewControllerSettingsPeriod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewControllerSettingsPeriod.swift; sourceTree = "<group>"; };
+		F9F934EE2485578900BF7AA7 /* Initial.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Initial.swift; sourceTree = "<group>"; };
+		F9F934F72485EE3C00BF7AA7 /* DataBaseAccountingBooks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataBaseAccountingBooks.swift; sourceTree = "<group>"; };
+		F9F934F92485F21400BF7AA7 /* DataBaseManagerAccountingBooks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataBaseManagerAccountingBooks.swift; sourceTree = "<group>"; };
+		F9FF9AB725317A0D00FB06BB /* TaxonomyAccount.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TaxonomyAccount.csv; sourceTree = "<group>"; };
+		FF36BAF969D04BE9BB741A1D /* Pods_Accountant_AccountantUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Accountant_AccountantUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		F94EDD8C237AEB3A0074D812 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				522318B0EE4F539BA11D8AFE /* Pods_Accountant.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F94EDDA4237AEB3B0074D812 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9BDB671CB0D8BBA854E16604 /* Pods_AccountantTests.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F94EDDAF237AEB3C0074D812 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F57BFBC12EF00163D781E050 /* Pods_Accountant_AccountantUITests.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		E1E5AF283FD62A963E8A39BF /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				84DA037E2BAF912127067D70 /* Pods-Accountant.debug.xcconfig */,
+				0607E6C6A3527AD59D0F557D /* Pods-Accountant.release.xcconfig */,
+				83B54E7192BB1D0790175288 /* Pods-Accountant-AccountantUITests.debug.xcconfig */,
+				1F51C0A378B805DC283D9A49 /* Pods-Accountant-AccountantUITests.release.xcconfig */,
+				3947D5A43F0563FFA12C14FA /* Pods-AccountantTests.debug.xcconfig */,
+				E4E5E538AD3BB3474BDA9AF2 /* Pods-AccountantTests.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		F3D2BF7C1C8F3D6EA0FEFA88 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				47268BE9267E04BF5DFFF33F /* Pods_Accountant.framework */,
+				FF36BAF969D04BE9BB741A1D /* Pods_Accountant_AccountantUITests.framework */,
+				CBC6138EA740D75AAB1DD259 /* Pods_AccountantTests.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		F9134C222476BBC1002A0F77 /* SettingsCategory */ = {
+			isa = PBXGroup;
+			children = (
+				F98CD96124DCA92F001CBF94 /* SettingsCategoryMain */,
+			);
+			path = SettingsCategory;
+			sourceTree = "<group>";
+		};
+		F919603524AC6FC40084A18B /* PrintOut */ = {
+			isa = PBXGroup;
+			children = (
+				F919603124AC53890084A18B /* File.swift */,
+				F919603324AC679E0084A18B /* File2.swift */,
+			);
+			path = PrintOut;
+			sourceTree = "<group>";
+		};
+		F929C009247708470034FAAF /* MasterData */ = {
+			isa = PBXGroup;
+			children = (
+				F929C00A247708CF0034FAAF /* MasterData.swift */,
+			);
+			path = MasterData;
+			sourceTree = "<group>";
+		};
+		F929C0252478365E0034FAAF /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				F9789A332475C49B00B62CAF /* TableViewControllerSettings.swift */,
+				F9789A352475CA8000B62CAF /* TableViewCellSettings.swift */,
+				F9F4607524CF64BA008FE62B /* SettingsInformation */,
+				F9F934EA2485544B00BF7AA7 /* SettingPeriod */,
+				F9134C222476BBC1002A0F77 /* SettingsCategory */,
+			);
+			name = Settings;
+			sourceTree = "<group>";
+		};
+		F9318AE224A60C5200CE45BE /* FinancialStatementDB */ = {
+			isa = PBXGroup;
+			children = (
+				F9354DC424990AB4007DB098 /* DataBaseManagerFinancialStatements.swift */,
+				F9354DB52498A361007DB098 /* DataBaseFinancialStatements.swift */,
+			);
+			path = FinancialStatementDB;
+			sourceTree = "<group>";
+		};
+		F9354DB02498986F007DB098 /* TBDB */ = {
+			isa = PBXGroup;
+			children = (
+				F9354DB124989895007DB098 /* DataBaseManagerTB.swift */,
+				F9354DB72498C7C8007DB098 /* DataBaseCompoundTrialBalance.swift */,
+				F9354DB324989BAA007DB098 /* DataBaseTrialBalance.swift */,
+			);
+			path = TBDB;
+			sourceTree = "<group>";
+		};
+		F9354DB92498DD81007DB098 /* WSDB */ = {
+			isa = PBXGroup;
+			children = (
+				F9F26EFE24D6C1DC00241DB4 /* DataBaseManagerWS.swift */,
+				F9354DBA2498DDF4007DB098 /* DataBaseWorkSheet.swift */,
+				F9354DBC2498E5D3007DB098 /* DataBaseAdjustingEntry.swift */,
+			);
+			path = WSDB;
+			sourceTree = "<group>";
+		};
+		F9354DBE2498F721007DB098 /* PLDB */ = {
+			isa = PBXGroup;
+			children = (
+				F976798C24A8904B007A0D73 /* DataBaseManagerPL.swift */,
+				F9354DBF2498F730007DB098 /* DataBaseProfitAndLossStatement.swift */,
+			);
+			path = PLDB;
+			sourceTree = "<group>";
+		};
+		F9354DC12498FE63007DB098 /* CFDB */ = {
+			isa = PBXGroup;
+			children = (
+				F9354DC22498FEB5007DB098 /* DataBaseCashFlowStatement.swift */,
+			);
+			path = CFDB;
+			sourceTree = "<group>";
+		};
+		F93A630324FAD5D500C1C2C1 /* AccountingBooksShelf */ = {
+			isa = PBXGroup;
+			children = (
+				F93A630424FAD5FB00C1C2C1 /* AccountingBooksShelfDB */,
+			);
+			path = AccountingBooksShelf;
+			sourceTree = "<group>";
+		};
+		F93A630424FAD5FB00C1C2C1 /* AccountingBooksShelfDB */ = {
+			isa = PBXGroup;
+			children = (
+				F91F6E2C248A1259003C3F5D /* DataBaseManagerAccountingBooksShelf.swift */,
+				F9D224C824893F61006C6CD9 /* DataBaseAccountingBooksShelf.swift */,
+			);
+			path = AccountingBooksShelfDB;
+			sourceTree = "<group>";
+		};
+		F93A630524FAD63E00C1C2C1 /* AccountingBooksDB */ = {
+			isa = PBXGroup;
+			children = (
+				F9F934F92485F21400BF7AA7 /* DataBaseManagerAccountingBooks.swift */,
+				F9F934F72485EE3C00BF7AA7 /* DataBaseAccountingBooks.swift */,
+			);
+			path = AccountingBooksDB;
+			sourceTree = "<group>";
+		};
+		F93A630624FAD67000C1C2C1 /* AccountingBooks */ = {
+			isa = PBXGroup;
+			children = (
+				F93A630524FAD63E00C1C2C1 /* AccountingBooksDB */,
+			);
+			path = AccountingBooks;
+			sourceTree = "<group>";
+		};
+		F94EDD86237AEB3A0074D812 = {
+			isa = PBXGroup;
+			children = (
+				F99CF359251B2D18004295DE /* taxonomy.csv */,
+				F9FF9AB725317A0D00FB06BB /* TaxonomyAccount.csv */,
+				F94EDD91237AEB3A0074D812 /* Accountant */,
+				F94EDDAA237AEB3B0074D812 /* AccountantTests */,
+				F94EDDB5237AEB3C0074D812 /* AccountantUITests */,
+				F94EDD90237AEB3A0074D812 /* Products */,
+				E1E5AF283FD62A963E8A39BF /* Pods */,
+				F3D2BF7C1C8F3D6EA0FEFA88 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+			usesTabs = 0;
+		};
+		F94EDD90237AEB3A0074D812 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F94EDD8F237AEB3A0074D812 /* Accounting book.app */,
+				F94EDDA7237AEB3B0074D812 /* AccountantTests.xctest */,
+				F94EDDB2237AEB3C0074D812 /* AccountantUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F94EDD91237AEB3A0074D812 /* Accountant */ = {
+			isa = PBXGroup;
+			children = (
+				F94EDD92237AEB3A0074D812 /* AppDelegate.swift */,
+				F94EDD94237AEB3A0074D812 /* DocumentBrowserViewController.swift */,
+				F94EDD96237AEB3A0074D812 /* DocumentView.swift */,
+				F94EDD98237AEB3A0074D812 /* Document.swift */,
+				F94EDD9F237AEB3B0074D812 /* LaunchScreen.storyboard */,
+				F94EDD9A237AEB3A0074D812 /* Main.storyboard */,
+				F94EDD9D237AEB3B0074D812 /* Assets.xcassets */,
+				F94EDDA2237AEB3B0074D812 /* Info.plist */,
+				F95A8C942552A0D900789B0D /* GoogleService-Info.plist */,
+				F9E620FA256527E000C2C3B3 /* Gecco */,
+				F9F4605224BDD5D5008FE62B /* DataBaseRealm */,
+				F9F934ED2485574300BF7AA7 /* Initial */,
+				F93A630324FAD5D500C1C2C1 /* AccountingBooksShelf */,
+				F93A630624FAD67000C1C2C1 /* AccountingBooks */,
+				F9812F9223F2DC2E0076AD48 /* Journals */,
+				F9812F9323F2DEBF0076AD48 /* GeneralLedger */,
+				F955B605248FE5F2005E2C6D /* FinancialStatement */,
+				F9789A322475C41700B62CAF /* Settings */,
+				F919603524AC6FC40084A18B /* PrintOut */,
+			);
+			path = Accountant;
+			sourceTree = "<group>";
+		};
+		F94EDDAA237AEB3B0074D812 /* AccountantTests */ = {
+			isa = PBXGroup;
+			children = (
+				F94EDDAB237AEB3C0074D812 /* AccountantTests.swift */,
+				F94EDDAD237AEB3C0074D812 /* Info.plist */,
+			);
+			path = AccountantTests;
+			sourceTree = "<group>";
+		};
+		F94EDDB5237AEB3C0074D812 /* AccountantUITests */ = {
+			isa = PBXGroup;
+			children = (
+				F94EDDB6237AEB3C0074D812 /* AccountantUITests.swift */,
+				F94EDDB8237AEB3C0074D812 /* Info.plist */,
+			);
+			path = AccountantUITests;
+			sourceTree = "<group>";
+		};
+		F955B605248FE5F2005E2C6D /* FinancialStatement */ = {
+			isa = PBXGroup;
+			children = (
+				F955B606248FE6EF005E2C6D /* TableViewControllerFinancialStatement.swift */,
+				F9318AE224A60C5200CE45BE /* FinancialStatementDB */,
+				F955B60E2490FCD6005E2C6D /* BS */,
+				F9F4607224C9D97C008FE62B /* TaxonomyDB */,
+				F955B6082490E305005E2C6D /* PL */,
+				F955B60F2490FD1D005E2C6D /* CF */,
+				F955B61324910003005E2C6D /* WS */,
+				F955B6122490FF9A005E2C6D /* TB */,
+				F9706847252AC631003307F8 /* PLAccount */,
+			);
+			path = FinancialStatement;
+			sourceTree = "<group>";
+		};
+		F955B6082490E305005E2C6D /* PL */ = {
+			isa = PBXGroup;
+			children = (
+				F955B6092490E31E005E2C6D /* TableViewControllerPL.swift */,
+				F973981424A99D5F00A05C5F /* TableViewCellAmount.swift */,
+				F9354DBE2498F721007DB098 /* PLDB */,
+			);
+			path = PL;
+			sourceTree = "<group>";
+		};
+		F955B60E2490FCD6005E2C6D /* BS */ = {
+			isa = PBXGroup;
+			children = (
+				F955B60B2490FB77005E2C6D /* TableViewControllerBS.swift */,
+				F9AAB36124941F1A00AB2FBD /* TableViewCellAccount.swift */,
+				F99112E024951F8700E28BB9 /* TableViewCellTotalOfBigCategory.swift */,
+				F99112DE249514DB00E28BB9 /* TableViewCellTotalOfMiddleCategory.swift */,
+				F99112E2249528D000E28BB9 /* BSDB */,
+			);
+			path = BS;
+			sourceTree = "<group>";
+		};
+		F955B60F2490FD1D005E2C6D /* CF */ = {
+			isa = PBXGroup;
+			children = (
+				F955B6102490FD3E005E2C6D /* TableViewControllerCF.swift */,
+				F9354DC12498FE63007DB098 /* CFDB */,
+			);
+			path = CF;
+			sourceTree = "<group>";
+		};
+		F955B6122490FF9A005E2C6D /* TB */ = {
+			isa = PBXGroup;
+			children = (
+				F92F4EF3249CCD5B00D50767 /* ViewControllerTB.swift */,
+				F9711328249D12A1006258F7 /* TableViewCellTB.swift */,
+				F9354DB02498986F007DB098 /* TBDB */,
+			);
+			path = TB;
+			sourceTree = "<group>";
+		};
+		F955B61324910003005E2C6D /* WS */ = {
+			isa = PBXGroup;
+			children = (
+				F99B65BC24B781E3006BD3DD /* ViewControllerWS.swift */,
+				F99B65BE24B7A38F006BD3DD /* TableViewCellWS.swift */,
+				F9354DB92498DD81007DB098 /* WSDB */,
+			);
+			path = WS;
+			sourceTree = "<group>";
+		};
+		F9706847252AC631003307F8 /* PLAccount */ = {
+			isa = PBXGroup;
+			children = (
+				F9A20F46255DC1B600F7D6A5 /* PLAccountDB */,
+			);
+			path = PLAccount;
+			sourceTree = "<group>";
+		};
+		F9789A322475C41700B62CAF /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				F929C0252478365E0034FAAF /* Settings */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		F9812F9223F2DC2E0076AD48 /* Journals */ = {
+			isa = PBXGroup;
+			children = (
+				F99EDE0E246C00F500334FF4 /* Journals */,
+				F99EDE0F246C012E00334FF4 /* JournalEntry */,
+			);
+			path = Journals;
+			sourceTree = "<group>";
+		};
+		F9812F9323F2DEBF0076AD48 /* GeneralLedger */ = {
+			isa = PBXGroup;
+			children = (
+				F9F934F02485CDB900BF7AA7 /* GeneralLedger */,
+				F9D5D54B247E409400EA35C7 /* GenearlLedgerAccount */,
+				F9D224C724893F41006C6CD9 /* SubsidiaryLedger */,
+			);
+			path = GeneralLedger;
+			sourceTree = "<group>";
+		};
+		F98CD95D24DCA0FA001CBF94 /* SettingsCategoryList */ = {
+			isa = PBXGroup;
+			children = (
+				F9134C232476BC25002A0F77 /* TableViewControllerCategoryList.swift */,
+				F9134C252476BCE6002A0F77 /* TableViewCellCategoryList.swift */,
+				F9A59B4B25187C3E00930A91 /* SettingsCategoryDetail */,
+			);
+			path = SettingsCategoryList;
+			sourceTree = "<group>";
+		};
+		F98CD95E24DCA134001CBF94 /* SettingsCategoryGroups */ = {
+			isa = PBXGroup;
+			children = (
+				F98CD96F24DCB13E001CBF94 /* TableViewControllerSettingsGroups.swift */,
+			);
+			path = SettingsCategoryGroups;
+			sourceTree = "<group>";
+		};
+		F98CD96124DCA92F001CBF94 /* SettingsCategoryMain */ = {
+			isa = PBXGroup;
+			children = (
+				F98CD95F24DCA2C0001CBF94 /* TableViewControllerSettingsCategory.swift */,
+				F9F4607A24D1A298008FE62B /* SettingsTaxonomyDB */,
+				F9F934F52485EC6D00BF7AA7 /* SettingsTaxonomyAccountDB */,
+				F98CD95D24DCA0FA001CBF94 /* SettingsCategoryList */,
+				F9C2BEB8250C9D4700825936 /* SettingsTaxonomyAccountByTaxonomyList */,
+				F9C2BEBB250CCF4F00825936 /* SettingsTaxonomyList */,
+				F98CD95E24DCA134001CBF94 /* SettingsCategoryGroups */,
+			);
+			path = SettingsCategoryMain;
+			sourceTree = "<group>";
+		};
+		F99112E2249528D000E28BB9 /* BSDB */ = {
+			isa = PBXGroup;
+			children = (
+				F99112E32495290000E28BB9 /* DataBaseManagerBS.swift */,
+				F99112E524952EA100E28BB9 /* DataBaseBalanceSheet.swift */,
+			);
+			path = BSDB;
+			sourceTree = "<group>";
+		};
+		F99EDE0E246C00F500334FF4 /* Journals */ = {
+			isa = PBXGroup;
+			children = (
+				F9CF22E42424F46500572070 /* TableViewControllerJournals.swift */,
+				F9CF22E62425016E00572070 /* TableViewCell.swift */,
+				F9F934F32485EC2300BF7AA7 /* JournalsDB */,
+			);
+			path = Journals;
+			sourceTree = "<group>";
+		};
+		F99EDE0F246C012E00334FF4 /* JournalEntry */ = {
+			isa = PBXGroup;
+			children = (
+				F92EA9372428B18100B721C3 /* ViewControllerJournalEntry.swift */,
+				F9F4608024D1ED15008FE62B /* PickerTextField.swift */,
+				F9F934F42485EC3600BF7AA7 /* JournalEntryDB */,
+			);
+			path = JournalEntry;
+			sourceTree = "<group>";
+		};
+		F9A20F46255DC1B600F7D6A5 /* PLAccountDB */ = {
+			isa = PBXGroup;
+			children = (
+				F9706848252ACD38003307F8 /* DataBaseManagerPLAccount.swift */,
+			);
+			path = PLAccountDB;
+			sourceTree = "<group>";
+		};
+		F9A59B4B25187C3E00930A91 /* SettingsCategoryDetail */ = {
+			isa = PBXGroup;
+			children = (
+				F9D08D9025444E8800CE3CB2 /* TableViewControllerSettingsCategoryDetail.swift */,
+				F9D08D9225444EA500CE3CB2 /* TableViewCellSettingAccountDetail.swift */,
+				F97422D9253F091500FBA052 /* TableViewCellSettingAccountDetailAccount.swift */,
+				F97422D8253F091500FBA052 /* TableViewCellSettingAccountDetailTaxonomy.swift */,
+				F97422DA253F091500FBA052 /* PickerTextFieldAccountDetail.swift */,
+			);
+			path = SettingsCategoryDetail;
+			sourceTree = "<group>";
+		};
+		F9C2BEB8250C9D4700825936 /* SettingsTaxonomyAccountByTaxonomyList */ = {
+			isa = PBXGroup;
+			children = (
+				F9C2BEB9250C9E8500825936 /* TableViewControllerSettingsTaxonomyAccountByTaxonomyList.swift */,
+			);
+			path = SettingsTaxonomyAccountByTaxonomyList;
+			sourceTree = "<group>";
+		};
+		F9C2BEBB250CCF4F00825936 /* SettingsTaxonomyList */ = {
+			isa = PBXGroup;
+			children = (
+				F9C2BEBC250CCF9E00825936 /* TableViewControllerSettingsTaxonomyList.swift */,
+			);
+			path = SettingsTaxonomyList;
+			sourceTree = "<group>";
+		};
+		F9D224C424891ED3006C6CD9 /* SettingPeriodDB */ = {
+			isa = PBXGroup;
+			children = (
+				F9D224C52489208D006C6CD9 /* DataBaseManagerPeriod.swift */,
+			);
+			path = SettingPeriodDB;
+			sourceTree = "<group>";
+		};
+		F9D224C724893F41006C6CD9 /* SubsidiaryLedger */ = {
+			isa = PBXGroup;
+			children = (
+				F9D224CA2489445B006C6CD9 /* SubsidiaryLedgerDB */,
+			);
+			path = SubsidiaryLedger;
+			sourceTree = "<group>";
+		};
+		F9D224CA2489445B006C6CD9 /* SubsidiaryLedgerDB */ = {
+			isa = PBXGroup;
+			children = (
+				F9D224CB24894493006C6CD9 /* DataBaseSubsidiaryLedger.swift */,
+			);
+			path = SubsidiaryLedgerDB;
+			sourceTree = "<group>";
+		};
+		F9D5D54B247E409400EA35C7 /* GenearlLedgerAccount */ = {
+			isa = PBXGroup;
+			children = (
+				F9D5D549247E408C00EA35C7 /* ViewControllerGenearlLedgerAccount.swift */,
+				F9D5D543247E2E7900EA35C7 /* TableViewCellGeneralLedgerAccount.swift */,
+				F9F934F12485EB5B00BF7AA7 /* GeneralLedgerAccountDB */,
+			);
+			name = GenearlLedgerAccount;
+			sourceTree = "<group>";
+		};
+		F9E620FA256527E000C2C3B3 /* Gecco */ = {
+			isa = PBXGroup;
+			children = (
+				F9E620FB2565281600C2C3B3 /* AnnotationViewController.swift */,
+				F9BEED0D2566F56400678391 /* AnnotationViewControllerJournals.swift */,
+				F9E620FD25656A9A00C2C3B3 /* AnnotationViewControllerJournalEntry.swift */,
+				F9BEED0F2566FB3900678391 /* AnnotationViewControllerSettingPeriod.swift */,
+				F9BEED11256704A800678391 /* AnnotationViewControllerSettingsCategory.swift */,
+				F9BEED1325671D6700678391 /* AnnotationViewControllerSettingsInformation.swift */,
+			);
+			path = Gecco;
+			sourceTree = "<group>";
+		};
+		F9F4605224BDD5D5008FE62B /* DataBaseRealm */ = {
+			isa = PBXGroup;
+			children = (
+				F9F4605324BDD616008FE62B /* Migration.swift */,
+				F93A62FF24FA79A400C1C2C1 /* DataBaseManager.swift */,
+				F93A630124FA8AFC00C1C2C1 /* DataBase.swift */,
+			);
+			path = DataBaseRealm;
+			sourceTree = "<group>";
+		};
+		F9F4607224C9D97C008FE62B /* TaxonomyDB */ = {
+			isa = PBXGroup;
+			children = (
+				F9F4606424C437F1008FE62B /* DataBaseManagerTaxonomy.swift */,
+				F9F4606024C280DF008FE62B /* DataBaseTaxonomy.swift */,
+			);
+			path = TaxonomyDB;
+			sourceTree = "<group>";
+		};
+		F9F4607524CF64BA008FE62B /* SettingsInformation */ = {
+			isa = PBXGroup;
+			children = (
+				F9F4607624D04F8F008FE62B /* TableViewControllerSettingsInformation.swift */,
+				F9F4607824D06F6C008FE62B /* TableViewCellCompanyName.swift */,
+			);
+			path = SettingsInformation;
+			sourceTree = "<group>";
+		};
+		F9F4607A24D1A298008FE62B /* SettingsTaxonomyDB */ = {
+			isa = PBXGroup;
+			children = (
+				F9F4606824C82F74008FE62B /* DataBaseManagerSettingsTaxonomy.swift */,
+				F9F4606624C44C8F008FE62B /* DataBaseSettingsTaxonomy.swift */,
+			);
+			path = SettingsTaxonomyDB;
+			sourceTree = "<group>";
+		};
+		F9F934EA2485544B00BF7AA7 /* SettingPeriod */ = {
+			isa = PBXGroup;
+			children = (
+				F9F934EB248554DA00BF7AA7 /* TableViewControllerSettingsPeriod.swift */,
+				F9D34FB6248A324A00F8B403 /* ViewControllerSettingsPeriodYear.swift */,
+				F9D224C424891ED3006C6CD9 /* SettingPeriodDB */,
+			);
+			path = SettingPeriod;
+			sourceTree = "<group>";
+		};
+		F9F934ED2485574300BF7AA7 /* Initial */ = {
+			isa = PBXGroup;
+			children = (
+				F9F934EE2485578900BF7AA7 /* Initial.swift */,
+				F929C009247708470034FAAF /* MasterData */,
+			);
+			path = Initial;
+			sourceTree = "<group>";
+		};
+		F9F934F02485CDB900BF7AA7 /* GeneralLedger */ = {
+			isa = PBXGroup;
+			children = (
+				F9BF067C24289DC700C59031 /* TableViewControllerGeneralLedger.swift */,
+				F9D5D54E247E783C00EA35C7 /* TableViewCellGeneralLedger.swift */,
+				F9F934F22485EBBA00BF7AA7 /* GeneralLedgerDB */,
+			);
+			name = GeneralLedger;
+			sourceTree = "<group>";
+		};
+		F9F934F12485EB5B00BF7AA7 /* GeneralLedgerAccountDB */ = {
+			isa = PBXGroup;
+			children = (
+				F9D5D54C247E48D600EA35C7 /* DataBaseManagerAccount.swift */,
+				F9F934E02484C40400BF7AA7 /* DataBaseAccount.swift */,
+				F9E53C23247F9E6B007C2F66 /* DataBaseManagerGeneralLedgerAccountBalance.swift */,
+			);
+			name = GeneralLedgerAccountDB;
+			sourceTree = "<group>";
+		};
+		F9F934F22485EBBA00BF7AA7 /* GeneralLedgerDB */ = {
+			isa = PBXGroup;
+			children = (
+				F9F934E62484E79100BF7AA7 /* DataBaseManagerGeneralLedger.swift */,
+				F9F934E82484E7BD00BF7AA7 /* DataBaseGeneralLedger.swift */,
+			);
+			name = GeneralLedgerDB;
+			sourceTree = "<group>";
+		};
+		F9F934F32485EC2300BF7AA7 /* JournalsDB */ = {
+			isa = PBXGroup;
+			children = (
+				F9F934E42484D59900BF7AA7 /* DataBaseManagerJournals.swift */,
+				F9F934E22484D53100BF7AA7 /* DataBaseJournals.swift */,
+			);
+			path = JournalsDB;
+			sourceTree = "<group>";
+		};
+		F9F934F42485EC3600BF7AA7 /* JournalEntryDB */ = {
+			isa = PBXGroup;
+			children = (
+				F99EDE0C246C00B100334FF4 /* DataBaseManagerJournalEntry.swift */,
+				F90114132412A02F009DBE2F /* DataBaseJournalEntry.swift */,
+			);
+			path = JournalEntryDB;
+			sourceTree = "<group>";
+		};
+		F9F934F52485EC6D00BF7AA7 /* SettingsTaxonomyAccountDB */ = {
+			isa = PBXGroup;
+			children = (
+				F9134C272476E8CF002A0F77 /* DatabaseManagerSettingsTaxonomyAccount.swift */,
+				F9134C292476E987002A0F77 /* DataBaseSettingsTaxonomyAccount.swift */,
+			);
+			path = SettingsTaxonomyAccountDB;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		F94EDD8E237AEB3A0074D812 /* Accountant */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F94EDDBB237AEB3C0074D812 /* Build configuration list for PBXNativeTarget "Accountant" */;
+			buildPhases = (
+				828FA24E64D3395B5836D3CF /* [CP] Check Pods Manifest.lock */,
+				F94EDD8B237AEB3A0074D812 /* Sources */,
+				F94EDD8C237AEB3A0074D812 /* Frameworks */,
+				F94EDD8D237AEB3A0074D812 /* Resources */,
+				79E824EF775E8AB3AC9EFFDE /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Accountant;
+			productName = Accountant;
+			productReference = F94EDD8F237AEB3A0074D812 /* Accounting book.app */;
+			productType = "com.apple.product-type.application";
+		};
+		F94EDDA6237AEB3B0074D812 /* AccountantTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F94EDDBE237AEB3C0074D812 /* Build configuration list for PBXNativeTarget "AccountantTests" */;
+			buildPhases = (
+				3824B7B9BA656AD13B6800D9 /* [CP] Check Pods Manifest.lock */,
+				F94EDDA3237AEB3B0074D812 /* Sources */,
+				F94EDDA4237AEB3B0074D812 /* Frameworks */,
+				F94EDDA5237AEB3B0074D812 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F94EDDA9237AEB3B0074D812 /* PBXTargetDependency */,
+			);
+			name = AccountantTests;
+			productName = AccountantTests;
+			productReference = F94EDDA7237AEB3B0074D812 /* AccountantTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		F94EDDB1237AEB3C0074D812 /* AccountantUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F94EDDC1237AEB3C0074D812 /* Build configuration list for PBXNativeTarget "AccountantUITests" */;
+			buildPhases = (
+				C4F167957F695FF1C6921CE3 /* [CP] Check Pods Manifest.lock */,
+				F94EDDAE237AEB3C0074D812 /* Sources */,
+				F94EDDAF237AEB3C0074D812 /* Frameworks */,
+				F94EDDB0237AEB3C0074D812 /* Resources */,
+				212F3689F67AA74F3761F0C8 /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F94EDDB4237AEB3C0074D812 /* PBXTargetDependency */,
+			);
+			name = AccountantUITests;
+			productName = AccountantUITests;
+			productReference = F94EDDB2237AEB3C0074D812 /* AccountantUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		F94EDD87237AEB3A0074D812 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1110;
+				LastUpgradeCheck = 1110;
+				ORGANIZATIONNAME = "Hisashi Ishihara";
+				TargetAttributes = {
+					F94EDD8E237AEB3A0074D812 = {
+						CreatedOnToolsVersion = 11.1;
+					};
+					F94EDDA6237AEB3B0074D812 = {
+						CreatedOnToolsVersion = 11.1;
+						TestTargetID = F94EDD8E237AEB3A0074D812;
+					};
+					F94EDDB1237AEB3C0074D812 = {
+						CreatedOnToolsVersion = 11.1;
+						TestTargetID = F94EDD8E237AEB3A0074D812;
+					};
+				};
+			};
+			buildConfigurationList = F94EDD8A237AEB3A0074D812 /* Build configuration list for PBXProject "Accountant" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = F94EDD86237AEB3A0074D812;
+			productRefGroup = F94EDD90237AEB3A0074D812 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				F94EDD8E237AEB3A0074D812 /* Accountant */,
+				F94EDDA6237AEB3B0074D812 /* AccountantTests */,
+				F94EDDB1237AEB3C0074D812 /* AccountantUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		F94EDD8D237AEB3A0074D812 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F94EDDA1237AEB3B0074D812 /* LaunchScreen.storyboard in Resources */,
+				F94EDD9E237AEB3B0074D812 /* Assets.xcassets in Resources */,
+				F9FF9AB825317A0D00FB06BB /* TaxonomyAccount.csv in Resources */,
+				F99CF35B251B2D18004295DE /* taxonomy.csv in Resources */,
+				F94EDD9C237AEB3A0074D812 /* Main.storyboard in Resources */,
+				F95A8C952552A0D900789B0D /* GoogleService-Info.plist in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F94EDDA5237AEB3B0074D812 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F94EDDB0237AEB3C0074D812 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		212F3689F67AA74F3761F0C8 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Accountant-AccountantUITests/Pods-Accountant-AccountantUITests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Accountant-AccountantUITests/Pods-Accountant-AccountantUITests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Accountant-AccountantUITests/Pods-Accountant-AccountantUITests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		3824B7B9BA656AD13B6800D9 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-AccountantTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		79E824EF775E8AB3AC9EFFDE /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Accountant/Pods-Accountant-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Accountant/Pods-Accountant-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Accountant/Pods-Accountant-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		828FA24E64D3395B5836D3CF /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Accountant-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		C4F167957F695FF1C6921CE3 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Accountant-AccountantUITests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		F94EDD8B237AEB3A0074D812 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F966D828255D1732009BD18F /* DataBaseTaxonomy.swift in Sources */,
+				F966D827255D1729009BD18F /* DataBaseManagerTaxonomy.swift in Sources */,
+				F9D08D8F25444D2100CE3CB2 /* TableViewCellSettings.swift in Sources */,
+				F9D08D8D25444CF700CE3CB2 /* TableViewCellSettingAccountDetailAccount.swift in Sources */,
+				F9D08D8E25444CF700CE3CB2 /* TableViewCellSettingAccountDetailTaxonomy.swift in Sources */,
+				F97422E0253F091500FBA052 /* PickerTextFieldAccountDetail.swift in Sources */,
+				F907D3412521D080003B2556 /* DataBaseSettingsTaxonomy.swift in Sources */,
+				F98CD97724DCB49D001CBF94 /* TableViewControllerSettingsCategory.swift in Sources */,
+				F98CD97224DCB1CC001CBF94 /* TableViewControllerSettingsGroups.swift in Sources */,
+				F98CD96D24DCB077001CBF94 /* TableViewControllerCategoryList.swift in Sources */,
+				F98CD96C24DCB071001CBF94 /* TableViewCellCategoryList.swift in Sources */,
+				F9F4607B24D1A61A008FE62B /* DataBaseManagerSettingsTaxonomy.swift in Sources */,
+				F9F4607424C9E0BD008FE62B /* File2.swift in Sources */,
+				F92EA9382428B18100B721C3 /* ViewControllerJournalEntry.swift in Sources */,
+				F929C0232478361F0034FAAF /* DataBaseSettingsTaxonomyAccount.swift in Sources */,
+				F94EDD99237AEB3A0074D812 /* Document.swift in Sources */,
+				F93A630224FA8AFC00C1C2C1 /* DataBase.swift in Sources */,
+				F9F934E92484E7BD00BF7AA7 /* DataBaseGeneralLedger.swift in Sources */,
+				F99112E624952EA100E28BB9 /* DataBaseBalanceSheet.swift in Sources */,
+				F99112DF249514DB00E28BB9 /* TableViewCellTotalOfMiddleCategory.swift in Sources */,
+				F9CF22E72425016E00572070 /* TableViewCell.swift in Sources */,
+				F9F934EC248554DA00BF7AA7 /* TableViewControllerSettingsPeriod.swift in Sources */,
+				F94EDD95237AEB3A0074D812 /* DocumentBrowserViewController.swift in Sources */,
+				F9CF22E52424F46500572070 /* TableViewControllerJournals.swift in Sources */,
+				F9354DB224989895007DB098 /* DataBaseManagerTB.swift in Sources */,
+				F9D5D54D247E48D600EA35C7 /* DataBaseManagerAccount.swift in Sources */,
+				F9BF067D24289DC700C59031 /* TableViewControllerGeneralLedger.swift in Sources */,
+				F9E620FC2565281600C2C3B3 /* AnnotationViewController.swift in Sources */,
+				F9F934FA2485F21400BF7AA7 /* DataBaseManagerAccountingBooks.swift in Sources */,
+				F9354DC32498FEB5007DB098 /* DataBaseCashFlowStatement.swift in Sources */,
+				F99112E124951F8700E28BB9 /* TableViewCellTotalOfBigCategory.swift in Sources */,
+				F9354DB62498A361007DB098 /* DataBaseFinancialStatements.swift in Sources */,
+				F9354DBB2498DDF4007DB098 /* DataBaseWorkSheet.swift in Sources */,
+				F9BEED102566FB3900678391 /* AnnotationViewControllerSettingPeriod.swift in Sources */,
+				F9BEED0E2566F56400678391 /* AnnotationViewControllerJournals.swift in Sources */,
+				F9F4605424BDD616008FE62B /* Migration.swift in Sources */,
+				F9D224CC24894493006C6CD9 /* DataBaseSubsidiaryLedger.swift in Sources */,
+				F9D5D54F247E783C00EA35C7 /* TableViewCellGeneralLedger.swift in Sources */,
+				F9AAB36224941F1A00AB2FBD /* TableViewCellAccount.swift in Sources */,
+				F973981524A99D5F00A05C5F /* TableViewCellAmount.swift in Sources */,
+				F9354DC02498F730007DB098 /* DataBaseProfitAndLossStatement.swift in Sources */,
+				F9D08D9325444EA500CE3CB2 /* TableViewCellSettingAccountDetail.swift in Sources */,
+				F9F934E72484E79100BF7AA7 /* DataBaseManagerGeneralLedger.swift in Sources */,
+				F9F934F82485EE3C00BF7AA7 /* DataBaseAccountingBooks.swift in Sources */,
+				F955B60C2490FB77005E2C6D /* TableViewControllerBS.swift in Sources */,
+				F929C00B247708CF0034FAAF /* MasterData.swift in Sources */,
+				F9354DB424989BAA007DB098 /* DataBaseTrialBalance.swift in Sources */,
+				F9E53C24247F9E6B007C2F66 /* DataBaseManagerGeneralLedgerAccountBalance.swift in Sources */,
+				F92F4EF4249CCD5B00D50767 /* ViewControllerTB.swift in Sources */,
+				F9789A342475C49B00B62CAF /* TableViewControllerSettings.swift in Sources */,
+				F9D5D54A247E408C00EA35C7 /* ViewControllerGenearlLedgerAccount.swift in Sources */,
+				F93A630024FA79A400C1C2C1 /* DataBaseManager.swift in Sources */,
+				F90114142412A02F009DBE2F /* DataBaseJournalEntry.swift in Sources */,
+				F9711329249D12A1006258F7 /* TableViewCellTB.swift in Sources */,
+				F99B65BD24B781E3006BD3DD /* ViewControllerWS.swift in Sources */,
+				F919603224AC53890084A18B /* File.swift in Sources */,
+				F9C2BEBA250C9E8500825936 /* TableViewControllerSettingsTaxonomyAccountByTaxonomyList.swift in Sources */,
+				F9706849252ACD38003307F8 /* DataBaseManagerPLAccount.swift in Sources */,
+				F91F6E2D248A1259003C3F5D /* DataBaseManagerAccountingBooksShelf.swift in Sources */,
+				F9F934EF2485578900BF7AA7 /* Initial.swift in Sources */,
+				F9F934E12484C40400BF7AA7 /* DataBaseAccount.swift in Sources */,
+				F9C2BEBD250CCF9E00825936 /* TableViewControllerSettingsTaxonomyList.swift in Sources */,
+				F955B607248FE6EF005E2C6D /* TableViewControllerFinancialStatement.swift in Sources */,
+				F9354DC524990AB4007DB098 /* DataBaseManagerFinancialStatements.swift in Sources */,
+				F9E620FE25656A9A00C2C3B3 /* AnnotationViewControllerJournalEntry.swift in Sources */,
+				F9F26EFF24D6C1DC00241DB4 /* DataBaseManagerWS.swift in Sources */,
+				F9354DB82498C7C8007DB098 /* DataBaseCompoundTrialBalance.swift in Sources */,
+				F9F934E32484D53100BF7AA7 /* DataBaseJournals.swift in Sources */,
+				F976798D24A8904B007A0D73 /* DataBaseManagerPL.swift in Sources */,
+				F9D224C62489208D006C6CD9 /* DataBaseManagerPeriod.swift in Sources */,
+				F9354DBD2498E5D3007DB098 /* DataBaseAdjustingEntry.swift in Sources */,
+				F94EDD97237AEB3A0074D812 /* DocumentView.swift in Sources */,
+				F9F4607724D04F8F008FE62B /* TableViewControllerSettingsInformation.swift in Sources */,
+				F9F4607924D06F6C008FE62B /* TableViewCellCompanyName.swift in Sources */,
+				F94EDD93237AEB3A0074D812 /* AppDelegate.swift in Sources */,
+				F9F934E52484D59900BF7AA7 /* DataBaseManagerJournals.swift in Sources */,
+				F99112E42495290000E28BB9 /* DataBaseManagerBS.swift in Sources */,
+				F9D34FB7248A324A00F8B403 /* ViewControllerSettingsPeriodYear.swift in Sources */,
+				F99B65BF24B7A38F006BD3DD /* TableViewCellWS.swift in Sources */,
+				F99EDE0D246C00B100334FF4 /* DataBaseManagerJournalEntry.swift in Sources */,
+				F9D08D9125444E8800CE3CB2 /* TableViewControllerSettingsCategoryDetail.swift in Sources */,
+				F929C0242478361F0034FAAF /* DatabaseManagerSettingsTaxonomyAccount.swift in Sources */,
+				F955B60A2490E31E005E2C6D /* TableViewControllerPL.swift in Sources */,
+				F9D224C924893F61006C6CD9 /* DataBaseAccountingBooksShelf.swift in Sources */,
+				F955B6112490FD3E005E2C6D /* TableViewControllerCF.swift in Sources */,
+				F9D5D544247E2E7900EA35C7 /* TableViewCellGeneralLedgerAccount.swift in Sources */,
+				F9BEED12256704A800678391 /* AnnotationViewControllerSettingsCategory.swift in Sources */,
+				F9BEED1425671D6700678391 /* AnnotationViewControllerSettingsInformation.swift in Sources */,
+				F9F4608124D1ED15008FE62B /* PickerTextField.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F94EDDA3237AEB3B0074D812 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F94EDDAC237AEB3C0074D812 /* AccountantTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F94EDDAE237AEB3C0074D812 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F94EDDB7237AEB3C0074D812 /* AccountantUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		F94EDDA9237AEB3B0074D812 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F94EDD8E237AEB3A0074D812 /* Accountant */;
+			targetProxy = F94EDDA8237AEB3B0074D812 /* PBXContainerItemProxy */;
+		};
+		F94EDDB4237AEB3C0074D812 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F94EDD8E237AEB3A0074D812 /* Accountant */;
+			targetProxy = F94EDDB3237AEB3C0074D812 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		F94EDD9A237AEB3A0074D812 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F94EDD9B237AEB3A0074D812 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		F94EDD9F237AEB3B0074D812 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F94EDDA0237AEB3B0074D812 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		F94EDDB9237AEB3C0074D812 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		F94EDDBA237AEB3C0074D812 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		F94EDDBC237AEB3C0074D812 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 84DA037E2BAF912127067D70 /* Pods-Accountant.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1.3.04;
+				DEVELOPMENT_TEAM = T526NZN54U;
+				INFOPLIST_FILE = Accountant/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.3.01;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ikingdom.Accountant;
+				PRODUCT_NAME = "Accounting book";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		F94EDDBD237AEB3C0074D812 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0607E6C6A3527AD59D0F557D /* Pods-Accountant.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1.3.04;
+				DEVELOPMENT_TEAM = T526NZN54U;
+				INFOPLIST_FILE = Accountant/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.3.01;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ikingdom.Accountant;
+				PRODUCT_NAME = "Accounting book";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		F94EDDBF237AEB3C0074D812 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3947D5A43F0563FFA12C14FA /* Pods-AccountantTests.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = T526NZN54U;
+				INFOPLIST_FILE = AccountantTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.1;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.ikingdom.AccountantTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Accountant.app/Accountant";
+			};
+			name = Debug;
+		};
+		F94EDDC0237AEB3C0074D812 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = E4E5E538AD3BB3474BDA9AF2 /* Pods-AccountantTests.release.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = T526NZN54U;
+				INFOPLIST_FILE = AccountantTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.1;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.ikingdom.AccountantTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Accountant.app/Accountant";
+			};
+			name = Release;
+		};
+		F94EDDC2237AEB3C0074D812 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 83B54E7192BB1D0790175288 /* Pods-Accountant-AccountantUITests.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = T526NZN54U;
+				INFOPLIST_FILE = AccountantUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.ikingdom.AccountantUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Accountant;
+			};
+			name = Debug;
+		};
+		F94EDDC3237AEB3C0074D812 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1F51C0A378B805DC283D9A49 /* Pods-Accountant-AccountantUITests.release.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = T526NZN54U;
+				INFOPLIST_FILE = AccountantUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.ikingdom.AccountantUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Accountant;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		F94EDD8A237AEB3A0074D812 /* Build configuration list for PBXProject "Accountant" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F94EDDB9237AEB3C0074D812 /* Debug */,
+				F94EDDBA237AEB3C0074D812 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F94EDDBB237AEB3C0074D812 /* Build configuration list for PBXNativeTarget "Accountant" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F94EDDBC237AEB3C0074D812 /* Debug */,
+				F94EDDBD237AEB3C0074D812 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F94EDDBE237AEB3C0074D812 /* Build configuration list for PBXNativeTarget "AccountantTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F94EDDBF237AEB3C0074D812 /* Debug */,
+				F94EDDC0237AEB3C0074D812 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F94EDDC1237AEB3C0074D812 /* Build configuration list for PBXNativeTarget "AccountantUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F94EDDC2237AEB3C0074D812 /* Debug */,
+				F94EDDC3237AEB3C0074D812 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = F94EDD87237AEB3A0074D812 /* Project object */;
+}
