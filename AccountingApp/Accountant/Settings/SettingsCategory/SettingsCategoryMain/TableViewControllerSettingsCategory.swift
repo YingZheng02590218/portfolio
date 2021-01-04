@@ -18,7 +18,7 @@ class TableViewControllerSettingsCategory: UITableViewController {
     // テスト用広告ユニットID
     let TEST_ID = "ca-app-pub-3940256099942544/2934735716"
     // true:テスト
-    let AdMobTest:Bool = false
+    let AdMobTest:Bool = true
     @IBOutlet var gADBannerView: GADBannerView!
 
     
@@ -36,7 +36,7 @@ class TableViewControllerSettingsCategory: UITableViewController {
         // マネタイズ対応　完了　注意：viewDidLoad()ではなく、viewWillAppear()に実装すること
 //        print("Google Mobile Ads SDK version: \(GADRequest.sdkVersion())")
         // GADBannerView を作成する
-        gADBannerView = GADBannerView(adSize:kGADAdSizeLargeBanner)
+        gADBannerView = GADBannerView(adSize:kGADAdSizeMediumRectangle)
         // GADBannerView プロパティを設定する
         if AdMobTest {
             gADBannerView.adUnitID = TEST_ID

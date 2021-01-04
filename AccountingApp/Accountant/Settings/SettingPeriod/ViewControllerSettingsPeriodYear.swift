@@ -18,8 +18,12 @@ class ViewControllerSettingsPeriodYear: UIViewController,UIPickerViewDataSource,
         // Delegate設定
         pickerView.delegate = self
         pickerView.dataSource = self
+    }
+    // ビューが表示された後に呼ばれる
+    override func viewDidAppear(_ animated: Bool){
         // ドラムロールの初期位置 データベースに保存された年度の翌年
-        pickerView.selectRow(1, inComponent: 0, animated: false)
+        let dataBaseManagerPeriod = DataBaseManagerSettingsPeriod()
+        pickerView.selectRow(dataBaseManagerPeriod.getMainBooksAllCount(), inComponent: 0, animated: true) //翌年の分
     }
 
 //UIPickerView
@@ -31,7 +35,7 @@ class ViewControllerSettingsPeriodYear: UIViewController,UIPickerViewDataSource,
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
         switch component {
         case 0:
-            let dataBaseManagerPeriod = DataBaseManagerPeriod()
+            let dataBaseManagerPeriod = DataBaseManagerSettingsPeriod()
             return dataBaseManagerPeriod.getMainBooksAllCount() + 1 //翌年の分
         default:
             return 1
@@ -48,7 +52,7 @@ class ViewControllerSettingsPeriodYear: UIViewController,UIPickerViewDataSource,
      }
     // 年度の選択肢
     func getPeriodFromDB(row: Int) -> String {
-        let dataBaseManagerPeriod = DataBaseManagerPeriod()
+        let dataBaseManagerPeriod = DataBaseManagerSettingsPeriod()
         
         let objects = dataBaseManagerPeriod.getMainBooksAll()
         if dataBaseManagerPeriod.getMainBooksAllCount() <= row {
@@ -96,7 +100,7 @@ class ViewControllerSettingsPeriodYear: UIViewController,UIPickerViewDataSource,
         self.dismiss(animated: true, completion: {
             [presentingViewController] () -> Void in
             // ViewController(年度選択画面)を閉じた時に、遷移元であるViewController(会計期間画面)で行いたい処理
-            presentingViewController.viewWillAppear(true)// TableViewをリロードする処理がある
+            presentingViewController.showAd()// TableViewをリロードする処理がある
         })
     }
     

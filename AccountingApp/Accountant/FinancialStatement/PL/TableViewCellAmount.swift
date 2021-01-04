@@ -10,6 +10,7 @@ import UIKit
 
 class TableViewCellAmount: UITableViewCell {
 
+    @IBOutlet weak var label_amount_previous: UILabel!
     @IBOutlet weak var label_amount: UILabel!
     
     override func awakeFromNib() {

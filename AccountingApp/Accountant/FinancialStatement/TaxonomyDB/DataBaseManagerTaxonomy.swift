@@ -48,10 +48,10 @@ class DataBaseManagerTaxonomy {
     * @return result 合計額
     */
     // 取得 表示科目　表示名別の合計
-    func getTotalOfTaxonomy(numberOfSettingsTaxonomy: Int) -> String {
+    func getTotalOfTaxonomy(numberOfSettingsTaxonomy: Int, lastYear: Bool) -> String {
         // 開いている会計帳簿の年度を取得
-        let dataBaseManagerPeriod = DataBaseManagerPeriod()
-        let object = dataBaseManagerPeriod.getSettingsPeriod()
+        let dataBaseManagerPeriod = DataBaseManagerSettingsPeriod()
+        let object = dataBaseManagerPeriod.getSettingsPeriod(lastYear: lastYear)
         // 設定表示科目の連番から表示科目の名称を取得
 //        let accountName = getNameOfSettingsTaxonomy(number: numberOfSettingsTaxonomy)
 //        let realm = try! Realm()
@@ -78,8 +78,8 @@ class DataBaseManagerTaxonomy {
     */
     func setTotalOfTaxonomy(numberOfSettingsTaxonomy: Int) {
         // 開いている会計帳簿の年度を取得
-        let dataBaseManagerPeriod = DataBaseManagerPeriod()
-        let object = dataBaseManagerPeriod.getSettingsPeriod()
+        let dataBaseManagerPeriod = DataBaseManagerSettingsPeriod()
+        let object = dataBaseManagerPeriod.getSettingsPeriod(lastYear: false)
         // 設定表示科目の名称を取得
 //        let accountName = getNameOfSettingsTaxonomy(number: numberOfSettingsTaxonomy)
 //        let category2 = getCategory2OfSettingsTaxonomy(number: number) // 2020/11/09 計算方法修正のため不使用
@@ -135,8 +135,8 @@ class DataBaseManagerTaxonomy {
     func getTotalAmount(account: String) -> Int64 {
         // 引数に空白が入るのでインデックスエラーとなる　TaxonomyAccount.csvの最下行に余計な行が生成されている　2020/10/24
         // 開いている会計帳簿を取得
-        let dataBaseManagerPeriod = DataBaseManagerPeriod()
-        let object = dataBaseManagerPeriod.getSettingsPeriod()
+        let dataBaseManagerPeriod = DataBaseManagerSettingsPeriod()
+        let object = dataBaseManagerPeriod.getSettingsPeriod(lastYear: false)
         // (1)Realmのインスタンスを生成する
 //        let realm = try! Realm()
         // (2)データベース内に保存されているモデルを全て取得する
@@ -166,8 +166,8 @@ class DataBaseManagerTaxonomy {
     */
     func getTotalDebitOrCredit(big_category: Int, mid_category: Int, account: String) -> String {
         // 開いている会計帳簿の年度を取得
-        let dataBaseManagerPeriod = DataBaseManagerPeriod()
-        let object = dataBaseManagerPeriod.getSettingsPeriod()
+        let dataBaseManagerPeriod = DataBaseManagerSettingsPeriod()
+        let object = dataBaseManagerPeriod.getSettingsPeriod(lastYear: false)
 //        let realm = try! Realm()
         let objectss = object.dataBaseGeneralLedger
         var DebitOrCredit:String = "" // 借又貸

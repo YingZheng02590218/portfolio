@@ -18,7 +18,7 @@ class ViewControllerWS: UIViewController, UITableViewDelegate, UITableViewDataSo
     // テスト用広告ユニットID
     let TEST_ID = "ca-app-pub-3940256099942544/2934735716"
     // true:テスト
-    let AdMobTest:Bool = false
+    let AdMobTest:Bool = true
     @IBOutlet var gADBannerView: GADBannerView!
 
     @IBOutlet weak var label_company_name: UILabel!
@@ -38,21 +38,28 @@ class ViewControllerWS: UIViewController, UITableViewDelegate, UITableViewDataSo
 //        databaseManagerWS.calculateAmountOfAllAccount()
 //        databaseManagerWS.calculateAmountOfAllAccountForBS()
 //        databaseManagerWS.calculateAmountOfAllAccountForPL()
-        // 月末、年度末などの決算日をラベルに表示する
-        let dataBaseManagerAccountingBooksShelf = DataBaseManagerAccountingBooksShelf()
-        let company = dataBaseManagerAccountingBooksShelf.getCompanyName()
-        label_company_name.text = company // 社名
-        let dataBaseManagerPeriod = DataBaseManagerPeriod()
-        let fiscalYear = dataBaseManagerPeriod.getSettingsPeriodYear()
-        // ToDo どこで設定した年度のデータを参照するか考える
-        label_closingDate.text = String(fiscalYear+1) + "年3月31日" // 決算日を表示する
-        label_title.text = "精算表"
         let refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: Selector(("refreshTable")), for: UIControl.Event.valueChanged)
         self.TableView_WS.refreshControl = refreshControl
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        // インセットを設定する　ステータスバーとナビゲーションバーより下からテーブルビューを配置するため
+        TableView_WS.contentInset = UIEdgeInsets(top: +(UIApplication.shared.statusBarFrame.height+self.navigationController!.navigationBar.bounds.height), left: 0, bottom: (self.tabBarController?.tabBar.frame.size.height)!, right: 0)
+        // 月末、年度末などの決算日をラベルに表示する
+        let dataBaseManagerAccountingBooksShelf = DataBaseManagerAccountingBooksShelf()
+        let company = dataBaseManagerAccountingBooksShelf.getCompanyName()
+        label_company_name.text = company // 社名
+        let dataBaseManagerPeriod = DataBaseManagerSettingsPeriod()
+        let fiscalYear = dataBaseManagerPeriod.getSettingsPeriodYear()
+        let dataBaseManager = DataBaseManagerSettingsPeriod()
+        let object = dataBaseManager.getTheDayOfReckoning()
+        if object == "12/31" { // 会計期間が年をまたがない場合
+            label_closingDate.text = String(fiscalYear) + "年\(object.prefix(2))月\(object.suffix(2))日" // 決算日を表示する
+        }else {
+            label_closingDate.text = String(fiscalYear+1) + "年\(object.prefix(2))月\(object.suffix(2))日" // 決算日を表示する
+        }
+        label_title.text = "精算表"
         // 要素数が少ないUITableViewで残りの部分や余白を消す
         let tableFooterView = UIView(frame: CGRect.zero)
         TableView_WS.tableFooterView = tableFooterView
@@ -116,9 +123,9 @@ class ViewControllerWS: UIViewController, UITableViewDelegate, UITableViewDataSo
     
     @objc func refreshTable() {
         // 全勘定の合計と残高を計算する
-        let databaseManager = DataBaseManagerTB()
-        databaseManager.setAllAccountTotal()
-        databaseManager.calculateAmountOfAllAccount() // 合計額を計算
+//        let databaseManager = DataBaseManagerTB()
+//        databaseManager.setAllAccountTotal()
+//        databaseManager.calculateAmountOfAllAccount() // 合計額を計算
         //精算表　借方合計と貸方合計の計算 (修正記入、損益計算書、貸借対照表)
         let databaseManagerWS = DataBaseManagerWS()
         databaseManagerWS.calculateAmountOfAllAccount()
@@ -313,9 +320,9 @@ class ViewControllerWS: UIViewController, UITableViewDelegate, UITableViewDataSo
             cell.label_debit.backgroundColor = .lightGray
             cell.label_credit.backgroundColor = .lightGray
             // 修正記入
-            cell.label_debit1.text = setComma(amount:object.workSheet!.debit_adjustingEntries_balance_total)
+            cell.label_debit1.text = setComma(amount:object.workSheet!.debit_adjustingEntries_total_total) // 残高ではなく合計
             cell.label_debit1.textAlignment = NSTextAlignment.right
-            cell.label_credit1.text = setComma(amount:object.workSheet!.credit_adjustingEntries_balance_total)
+            cell.label_credit1.text = setComma(amount:object.workSheet!.credit_adjustingEntries_total_total) // 残高ではなく合計
             cell.label_credit1.textAlignment = NSTextAlignment.right
             // 借方貸方の金額が不一致の場合、文字色を赤
             if cell.label_debit1.text != cell.label_credit1.text {
@@ -400,7 +407,7 @@ class ViewControllerWS: UIViewController, UITableViewDelegate, UITableViewDataSo
             }
         }else{
             // インセットを設定する　ステータスバーとナビゲーションバーより下からテーブルビューを配置するため
-            scrollView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+            scrollView.contentInset = UIEdgeInsets(top: +(UIApplication.shared.statusBarFrame.height+self.navigationController!.navigationBar.bounds.height), left: 0, bottom: (self.tabBarController?.tabBar.frame.size.height)!, right: 0)
         }
     }
     var pageSize = CGSize(width: 210 / 25.4 * 72, height: 297 / 25.4 * 72)

@@ -17,8 +17,8 @@ class DataBaseManagerPLAccount  {
         let realm = try! Realm()
         var objects = realm.objects(DataBaseAdjustingEntry.self)
         // 開いている会計帳簿の年度を取得
-        let dataBaseManagerPeriod = DataBaseManagerPeriod()
-        let object = dataBaseManagerPeriod.getSettingsPeriod()
+        let dataBaseManagerPeriod = DataBaseManagerSettingsPeriod()
+        let object = dataBaseManagerPeriod.getSettingsPeriod(lastYear: false)
         let fiscalYear: Int = object.dataBaseJournals!.fiscalYear
         objects = objects
                 .filter("fiscalYear == \(fiscalYear)")
@@ -42,10 +42,19 @@ class DataBaseManagerPLAccount  {
             let dataBaseJournalEntry = DataBaseAdjustingEntry()
             var number = 0                                          //仕訳番号 自動採番にした
             // 開いている会計帳簿の年度を取得
-            let dataBaseManagerPeriod = DataBaseManagerPeriod()
-            let object = dataBaseManagerPeriod.getSettingsPeriod()
+            let dataBaseManagerPeriod = DataBaseManagerSettingsPeriod()
+            let object = dataBaseManagerPeriod.getSettingsPeriod(lastYear: false)
             let fiscalYear = object.dataBaseJournals?.fiscalYear
             dataBaseJournalEntry.fiscalYear = fiscalYear!                        //年度
+            // 決算日
+            let dataBaseManager = DataBaseManagerSettingsPeriod()
+            let theDayOfReckoning = dataBaseManager.getTheDayOfReckoning()
+            var fiscalYearFixed = ""
+            if theDayOfReckoning == "12/31" {
+                fiscalYearFixed = String(fiscalYear!)
+            }else {
+                fiscalYearFixed = String(fiscalYear!+1)
+            }
             // 現在時刻を取得
             let now :Date = Date() // UTC時間なので　9時間ずれる
             let f     = DateFormatter() //年
@@ -54,7 +63,7 @@ class DataBaseManagerPLAccount  {
             f.timeZone = .current
             fff.dateFormat  = DateFormatter.dateFormat(fromTemplate: "MM/dd", options: 0, locale: Locale(identifier: "en_US_POSIX"))
             fff.timeZone = .current
-            dataBaseJournalEntry.date = String(fiscalYear!+1) + "/03/31"
+            dataBaseJournalEntry.date = fiscalYearFixed + "/" + theDayOfReckoning
             dataBaseJournalEntry.debit_category = credit_category    //借方勘定　＊引数の貸方勘定を振替える
             dataBaseJournalEntry.debit_amount = amount        //借方金額
             dataBaseJournalEntry.credit_category = debit_category  //貸方勘定　＊引数の借方勘定を振替える
@@ -126,15 +135,24 @@ class DataBaseManagerPLAccount  {
             let dataBaseJournalEntry = DataBaseAdjustingEntry()
             var number = 0                                          //仕訳番号 自動採番にした
             // 開いている会計帳簿の年度を取得
-            let dataBaseManagerPeriod = DataBaseManagerPeriod()
-            let object = dataBaseManagerPeriod.getSettingsPeriod()
+            let dataBaseManagerPeriod = DataBaseManagerSettingsPeriod()
+            let object = dataBaseManagerPeriod.getSettingsPeriod(lastYear: false)
             let fiscalYear = object.dataBaseJournals?.fiscalYear
             dataBaseJournalEntry.fiscalYear = fiscalYear!                        //年度
+            // 決算日
+            let dataBaseManager = DataBaseManagerSettingsPeriod()
+            let theDayOfReckoning = dataBaseManager.getTheDayOfReckoning()
+            var fiscalYearFixed = ""
+            if theDayOfReckoning == "12/31" {
+                fiscalYearFixed = String(fiscalYear!)
+            }else {
+                fiscalYearFixed = String(fiscalYear!+1)
+            }
             // 現在時刻を取得
             let f     = DateFormatter() //年
             f.dateFormat    = DateFormatter.dateFormat(fromTemplate: "YYYY", options: 0, locale: Locale(identifier: "en_US_POSIX"))
             f.timeZone = .current
-            dataBaseJournalEntry.date = String(fiscalYear!+1) + "/03/31"
+            dataBaseJournalEntry.date = fiscalYearFixed + "/" + theDayOfReckoning
             dataBaseJournalEntry.debit_category = credit_category    //借方勘定　＊引数の貸方勘定を振替える
             dataBaseJournalEntry.debit_amount = amount        //借方金額
             dataBaseJournalEntry.credit_category = debit_category  //貸方勘定　＊引数の借方勘定を振替える

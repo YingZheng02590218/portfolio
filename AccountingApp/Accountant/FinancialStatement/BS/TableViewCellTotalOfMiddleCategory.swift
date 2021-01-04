@@ -10,6 +10,7 @@ import UIKit
 
 class TableViewCellTotalOfMiddleCategory: UITableViewCell {
 
+    @IBOutlet var label_totalOfMiddleCategory_previous: UILabel!
     @IBOutlet weak var label_totalOfMiddleCategory: UILabel!
     
     override func awakeFromNib() {

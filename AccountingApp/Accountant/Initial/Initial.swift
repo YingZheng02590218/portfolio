@@ -22,6 +22,10 @@ class Initial {
         initializeAccountingBooksShelf()
         // 表示科目　初期化
         initializeTaxonomy()
+        // 設定操作　初期化
+        initializeSettingsOperating()
+        // 設定会計期間　決算日　初期化
+        initializePeriod()
     }
     /**
     * 初期化　初期化メソッド
@@ -137,6 +141,26 @@ class Initial {
             dataBaseManagerTaxonomy.addTaxonomyAll()
         }else {
             print("deleteTaxonomyAll 失敗")
+        }
+    }
+    /**
+    * 初期化　初期化メソッド
+    * 設定操作を初期化する。
+    */
+    func initializeSettingsOperating() {
+        let dataBaseManager = DataBaseManagerSettingsOperating()
+        if !dataBaseManager.checkInitialising() {
+            dataBaseManager.addSettingsOperating()
+        }
+    }
+    /**
+    * 初期化　初期化メソッド
+    * 設定会計期間を初期化する。
+    */
+    func initializePeriod() {
+        let dataBaseManager = DataBaseManagerSettingsPeriod()
+        if !dataBaseManager.checkInitialising() {
+            dataBaseManager.addSettingsPeriod()
         }
     }
 }

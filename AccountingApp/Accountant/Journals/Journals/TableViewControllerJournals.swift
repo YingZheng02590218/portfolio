@@ -18,7 +18,7 @@ class TableViewControllerJournals: UITableViewController, UIGestureRecognizerDel
     // テスト用広告ユニットID
     let TEST_ID = "ca-app-pub-3940256099942544/2934735716"
     // true:テスト
-    let AdMobTest:Bool = false
+    let AdMobTest:Bool = true
     @IBOutlet var gADBannerView: GADBannerView!
     
     @IBOutlet var TableView_JournalEntry: UITableView! // アウトレット接続 Referencing Outlets が接続されていないとnilとなるので注意
@@ -40,16 +40,6 @@ class TableViewControllerJournals: UITableViewController, UIGestureRecognizerDel
 //        // アプリ初期化 初期表示画面を仕訳画面に変更したため、初期化処理も移動　2020/12/01
 //        let initial = Initial()
 //        initial.initialize()
-        // 月末、年度末などの決算日をラベルに表示する
-        let dataBaseManagerAccountingBooksShelf = DataBaseManagerAccountingBooksShelf()
-        let company = dataBaseManagerAccountingBooksShelf.getCompanyName()
-        label_company_name.text = company // 社名
-        let dataBaseManagerPeriod = DataBaseManagerPeriod()
-        let fiscalYear = dataBaseManagerPeriod.getSettingsPeriodYear()
-        label_closingDate.text = String(fiscalYear+1) + "年3月31日" // 決算日を表示する
-        label_title.text = "仕訳帳"
-        // データベース　注意：Initialより後に記述する
-        Label_list_date_year.text = fiscalYear.description + "年"
         // 初期表示位置
 //        scroll = true
         //3桁ごとにカンマ区切りするフォーマット
@@ -69,6 +59,22 @@ class TableViewControllerJournals: UITableViewController, UIGestureRecognizerDel
         // UIViewControllerの表示画面を更新・リロード
 //        self.loadView() // エラー発生　2020/07/31　Thread 1: EXC_BAD_ACCESS (code=1, address=0x600022903198)
         self.tableView.reloadData() // エラーが発生しないか心配
+        // 月末、年度末などの決算日をラベルに表示する
+        let dataBaseManagerAccountingBooksShelf = DataBaseManagerAccountingBooksShelf()
+        let company = dataBaseManagerAccountingBooksShelf.getCompanyName()
+        label_company_name.text = company // 社名
+        let dataBaseManagerPeriod = DataBaseManagerSettingsPeriod()
+        let fiscalYear = dataBaseManagerPeriod.getSettingsPeriodYear()
+        let dataBaseManager = DataBaseManagerSettingsPeriod()
+        let object = dataBaseManager.getTheDayOfReckoning()
+        if object == "12/31" { // 会計期間が年をまたがない場合
+            label_closingDate.text = String(fiscalYear) + "年\(object.prefix(2))月\(object.suffix(2))日" // 決算日を表示する
+        }else {
+            label_closingDate.text = String(fiscalYear+1) + "年\(object.prefix(2))月\(object.suffix(2))日" // 決算日を表示する
+        }
+        label_title.text = "仕訳帳"
+        // データベース　注意：Initialより後に記述する
+        Label_list_date_year.text = fiscalYear.description + "年"
         // 仕訳データが0件の場合、印刷ボタンを不活性にする
         // 空白行対応
         let dataBaseManagerAccount = DataBaseManagerAccount()
@@ -154,15 +160,15 @@ class TableViewControllerJournals: UITableViewController, UIGestureRecognizerDel
     }
     // リロード機能
     @objc func refreshTable() {
-        // 全勘定の合計と残高を計算する
+        // 全勘定の合計と残高を計算する　注意：決算日設定機能で決算日を変更後に損益勘定と繰越利益の日付を更新するために必要な処理である
         let databaseManager = DataBaseManagerTB()
         databaseManager.setAllAccountTotal()
         databaseManager.calculateAmountOfAllAccount() // 合計額を計算
         //精算表　借方合計と貸方合計の計算 (修正記入、損益計算書、貸借対照表)
-        let databaseManagerWS = DataBaseManagerWS()
-        databaseManagerWS.calculateAmountOfAllAccount()
-        databaseManagerWS.calculateAmountOfAllAccountForBS()
-        databaseManagerWS.calculateAmountOfAllAccountForPL()
+//        let databaseManagerWS = DataBaseManagerWS()
+//        databaseManagerWS.calculateAmountOfAllAccount()
+//        databaseManagerWS.calculateAmountOfAllAccountForBS()
+//        databaseManagerWS.calculateAmountOfAllAccountForPL()
         // 更新処理
         self.tableView.reloadData()
         // クルクルを止める
@@ -174,7 +180,7 @@ class TableViewControllerJournals: UITableViewController, UIGestureRecognizerDel
         let point = recognizer.location(in: tableView)
         let indexPath = tableView.indexPathForRow(at: point)
         
-        if indexPath?.section == 12 {
+        if indexPath?.section == 1 {
             print("空白行を長押し")
         }else {
             if indexPath == nil {
@@ -238,43 +244,22 @@ class TableViewControllerJournals: UITableViewController, UIGestureRecognizerDel
         let objects = dataBaseManagerAccount.getJournalEntryAll() // 通常仕訳　全
         let objectss = dataBaseManagerAccount.getAdjustingEntryAll() // 決算整理仕訳　全
         if objects.count + objectss.count <= 12 {
-            return 13 // 空白行を表示するためセクションを1つ追加
+            return 2 // 空白行を表示するためセクションを1つ追加
         }else {
-            return 12     // セクションの数はreturn 12 で 12ヶ月分に設定します。
+            return 1     // セクションの数はreturn 12 で 12ヶ月分に設定します。
         }
-    }
-    // セクションヘッダーの高さを決める
-    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 0//33 //セクションヘッダーの高さを33に設定　セルの高さより高くしてメリハリをつける セル(Row Hight 30)
-    }
-    // セクションヘッダーの色とか調整する
-    override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
-        let header = view as! UITableViewHeaderFooterView
-        header.textLabel?.textColor = UIColor.gray
-        header.textLabel?.textAlignment = .left
-//        let attributedStr = NSMutableAttributedString(string: header.textLabel?.text)
-//        let crossAttr = [NSAttributedString.Key.strikethroughStyle: NSUnderlineStyle.single.rawValue]
-//        header.textLabel?.text = attributedStr
-    }
-    // セクションヘッダーのテキスト決める
-    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        var section_num = section + 4//4月スタートに補正する todo 設定の決算月によって変更する
-        //セクションヘッダーは1年分の12ヶ月にする
-        if section_num >= 13 {  //12ヶ月を超えた場合1月に戻す
-            section_num -= 12
-        }
-        let mon = "月"
-        let header_title = section_num.description + mon
-        return header_title
     }
     //セルの数を、モデル(仕訳)の数に指定
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // データベース
         let dataBaseManager = DataBaseManagerJournalEntry()
         let objects = dataBaseManager.getJournalEntry(section: section) // 通常仕訳
-        let objectss = dataBaseManager.getJournalAdjustingEntry(section: section) // 決算整理仕訳
+        // 設定操作
+        let dataBaseManagerSettingsOperating = DataBaseManagerSettingsOperating()
+        let object = dataBaseManagerSettingsOperating.getSettingsOperating()
+        let objectss = dataBaseManager.getJournalAdjustingEntry(section: section, EnglishFromOfClosingTheLedger0: object!.EnglishFromOfClosingTheLedger0, EnglishFromOfClosingTheLedger1: object!.EnglishFromOfClosingTheLedger1) // 決算整理仕訳 損益振替仕訳 資本振替仕訳
         // 空白行対応
-        if section == 12 { // 空白行
+        if section == 1 { // 空白行
             let dataBaseManagerAccount = DataBaseManagerAccount()
             let objects = dataBaseManagerAccount.getJournalEntryAll() // 通常仕訳　全
             let objectss = dataBaseManagerAccount.getAdjustingEntryAll() // 決算整理仕訳　全
@@ -290,9 +275,9 @@ class TableViewControllerJournals: UITableViewController, UIGestureRecognizerDel
     //セルを生成して返却するメソッド
     var indexPathForAutoScroll: IndexPath = IndexPath(row: 0, section: 0)
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if indexPath.section == 12 {// 空白行
+        if indexPath.section == 1 { // 空白行
             //① UI部品を指定　TableViewCell
-            let cell = tableView.dequeueReusableCell(withIdentifier: "cell_list_journalEntry", for: indexPath) as! TableViewCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: "cell_list_journalEntry", for: indexPath) as! TableViewCellJournals
             cell.backgroundColor = .white // 目印を消す
             cell.label_list_date_month.text = ""    // 「月」注意：空白を代入しないと、変な値が入る。
             cell.label_list_date.text = ""     // 末尾2文字の「日」         //日付
@@ -308,14 +293,16 @@ class TableViewControllerJournals: UITableViewController, UIGestureRecognizerDel
             return cell
         }else { // 空白行ではない場合
             //① UI部品を指定　TableViewCell
-            let cell = tableView.dequeueReusableCell(withIdentifier: "cell_list_journalEntry", for: indexPath) as! TableViewCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: "cell_list_journalEntry", for: indexPath) as! TableViewCellJournals
             
             let dataBaseManager = DataBaseManagerJournalEntry()
             let objects = dataBaseManager.getJournalEntry(section: indexPath.section)
             
-            if indexPath.row >= objects.count {
-                let objectss = dataBaseManager.getJournalAdjustingEntry(section: indexPath.section) // 決算整理仕訳
-                
+            if indexPath.row >= objects.count { // 決算整理仕訳
+                // 設定操作
+                let dataBaseManagerSettingsOperating = DataBaseManagerSettingsOperating()
+                let object = dataBaseManagerSettingsOperating.getSettingsOperating()
+                let objectss = dataBaseManager.getJournalAdjustingEntry(section: indexPath.section, EnglishFromOfClosingTheLedger0: object!.EnglishFromOfClosingTheLedger0, EnglishFromOfClosingTheLedger1: object!.EnglishFromOfClosingTheLedger1) // 決算整理仕訳 損益振替仕訳 資本振替仕訳
                 cell.backgroundColor = .lightGray // 目印
                 //② todo 借方の場合は左寄せ、貸方の場合は右寄せ。小書きは左寄せ。
                 // メソッドの引数 indexPath の変数 row には、セルのインデックス番号が設定されています。インデックス指定に利用する。
@@ -324,12 +311,40 @@ class TableViewControllerJournals: UITableViewController, UIGestureRecognizerDel
                 }
                 let d = "\(objectss[indexPath.row-objects.count].date)" // 日付
                 // 月別のセクションのうち、日付が一番古いものに月欄に月を表示し、それ以降は空白とする。
-                if indexPath.row == 0 {
-                    let dateMonth = d[d.index(d.startIndex, offsetBy: 5)..<d.index(d.startIndex, offsetBy: 6)] // 日付の6文字目にある月の十の位を抽出
-                    if dateMonth == "0" { // 日の十の位が0の場合は表示しない
-                        cell.label_list_date_month.text = "\(d[d.index(d.startIndex, offsetBy: 6)..<d.index(d.startIndex, offsetBy: 7)])" // 「月」
-                    }else{
-                        cell.label_list_date_month.text = "\(d[d.index(d.startIndex, offsetBy: 5)..<d.index(d.startIndex, offsetBy: 7)])" // 「月」
+                if indexPath.section == 0 {
+                    if indexPath.row > 0 {
+                        if indexPath.row-objects.count > 0 { // 二行目以降は月の先頭のみ、月を表示する
+                            // 一行上のセルに表示した月とこの行の月を比較する
+                            let upperCellMonth = "\(objectss[indexPath.row-objects.count - 1].date)" // 日付
+                            let dateMonth = d[d.index(d.startIndex, offsetBy: 5)..<d.index(d.startIndex, offsetBy: 6)] // 日付の6文字目にある月の十の位を抽出
+                            if dateMonth == "0" { // 日の十の位が0の場合は表示しない
+                                if upperCellMonth[upperCellMonth.index(upperCellMonth.startIndex, offsetBy: 5)..<upperCellMonth.index(upperCellMonth.startIndex, offsetBy: 7)] != "\(d[d.index(d.startIndex, offsetBy: 5)..<d.index(d.startIndex, offsetBy: 7)])" {
+                                    cell.label_list_date_month.text = "\(d[d.index(d.startIndex, offsetBy: 6)..<d.index(d.startIndex, offsetBy: 7)])" // 「月」
+                                }else{
+                                    cell.label_list_date_month.text = "" // 注意：空白を代入しないと、変な値が入る。
+                                }
+                            }else{
+                                if upperCellMonth[upperCellMonth.index(upperCellMonth.startIndex, offsetBy: 5)..<upperCellMonth.index(upperCellMonth.startIndex, offsetBy: 7)] != "\(d[d.index(d.startIndex, offsetBy: 5)..<d.index(d.startIndex, offsetBy: 7)])" {
+                                    cell.label_list_date_month.text = "\(d[d.index(d.startIndex, offsetBy: 5)..<d.index(d.startIndex, offsetBy: 7)])" // 「月」
+                                }else{
+                                    cell.label_list_date_month.text = "" // 注意：空白を代入しないと、変な値が入る。
+                                }
+                            }
+                        }else { // 先頭行は月を表示
+                            let dateMonth = d[d.index(d.startIndex, offsetBy: 5)..<d.index(d.startIndex, offsetBy: 6)] // 日付の6文字目にある月の十の位を抽出
+                            if dateMonth == "0" { // 日の十の位が0の場合は表示しない
+                                cell.label_list_date_month.text = "\(d[d.index(d.startIndex, offsetBy: 6)..<d.index(d.startIndex, offsetBy: 7)])" // 「月」
+                            }else{
+                                cell.label_list_date_month.text = "\(d[d.index(d.startIndex, offsetBy: 5)..<d.index(d.startIndex, offsetBy: 7)])" // 「月」
+                            }
+                        }
+                    }else { // 先頭行は月を表示
+                        let dateMonth = d[d.index(d.startIndex, offsetBy: 5)..<d.index(d.startIndex, offsetBy: 6)] // 日付の6文字目にある月の十の位を抽出
+                        if dateMonth == "0" { // 日の十の位が0の場合は表示しない
+                            cell.label_list_date_month.text = "\(d[d.index(d.startIndex, offsetBy: 6)..<d.index(d.startIndex, offsetBy: 7)])" // 「月」
+                        }else{
+                            cell.label_list_date_month.text = "\(d[d.index(d.startIndex, offsetBy: 5)..<d.index(d.startIndex, offsetBy: 7)])" // 「月」
+                        }
                     }
                 }else{
                     cell.label_list_date_month.text = "" // 注意：空白を代入しないと、変な値が入る。
@@ -364,9 +379,9 @@ class TableViewControllerJournals: UITableViewController, UIGestureRecognizerDel
                 // セルの選択を許可
                 cell.selectionStyle = .default
                 return cell
-            }else {
+            }else { // 通常仕訳
                 //① UI部品を指定　TableViewCell
-                let cell = tableView.dequeueReusableCell(withIdentifier: "cell_list_journalEntry", for: indexPath) as! TableViewCell
+                let cell = tableView.dequeueReusableCell(withIdentifier: "cell_list_journalEntry", for: indexPath) as! TableViewCellJournals
                 cell.backgroundColor = .white // 目印を消す
                 //② todo 借方の場合は左寄せ、貸方の場合は右寄せ。小書きは左寄せ。
                 // メソッドの引数 indexPath の変数 row には、セルのインデックス番号が設定されています。インデックス指定に利用する。
@@ -375,12 +390,31 @@ class TableViewControllerJournals: UITableViewController, UIGestureRecognizerDel
                 }
                 let d = "\(objects[indexPath.row].date)" // 日付
                 // 月別のセクションのうち、日付が一番古いものに月欄に月を表示し、それ以降は空白とする。
-                if indexPath.row == 0 {
-                    let dateMonth = d[d.index(d.startIndex, offsetBy: 5)..<d.index(d.startIndex, offsetBy: 6)] // 日付の6文字目にある月の十の位を抽出
-                    if dateMonth == "0" { // 日の十の位が0の場合は表示しない
-                        cell.label_list_date_month.text = "\(d[d.index(d.startIndex, offsetBy: 6)..<d.index(d.startIndex, offsetBy: 7)])" // 「月」
-                    }else{
-                        cell.label_list_date_month.text = "\(d[d.index(d.startIndex, offsetBy: 5)..<d.index(d.startIndex, offsetBy: 7)])" // 「月」
+                if indexPath.section == 0 {
+                    if indexPath.row > 0 { // 二行目以降は月の先頭のみ、月を表示する
+                        // 一行上のセルに表示した月とこの行の月を比較する
+                        let upperCellMonth = "\(objects[indexPath.row - 1].date)" // 日付
+                        let dateMonth = d[d.index(d.startIndex, offsetBy: 5)..<d.index(d.startIndex, offsetBy: 6)] // 日付の6文字目にある月の十の位を抽出
+                        if dateMonth == "0" { // 日の十の位が0の場合は表示しない
+                            if upperCellMonth[upperCellMonth.index(upperCellMonth.startIndex, offsetBy: 5)..<upperCellMonth.index(upperCellMonth.startIndex, offsetBy: 7)] != "\(d[d.index(d.startIndex, offsetBy: 5)..<d.index(d.startIndex, offsetBy: 7)])" {
+                                cell.label_list_date_month.text = "\(d[d.index(d.startIndex, offsetBy: 6)..<d.index(d.startIndex, offsetBy: 7)])" // 「月」
+                            }else{
+                                cell.label_list_date_month.text = "" // 注意：空白を代入しないと、変な値が入る。
+                            }
+                        }else{
+                            if upperCellMonth[upperCellMonth.index(upperCellMonth.startIndex, offsetBy: 5)..<upperCellMonth.index(upperCellMonth.startIndex, offsetBy: 7)] != "\(d[d.index(d.startIndex, offsetBy: 5)..<d.index(d.startIndex, offsetBy: 7)])" {
+                                cell.label_list_date_month.text = "\(d[d.index(d.startIndex, offsetBy: 5)..<d.index(d.startIndex, offsetBy: 7)])" // 「月」
+                            }else{
+                                cell.label_list_date_month.text = "" // 注意：空白を代入しないと、変な値が入る。
+                            }
+                        }
+                    }else { // 先頭行は月を表示
+                        let dateMonth = d[d.index(d.startIndex, offsetBy: 5)..<d.index(d.startIndex, offsetBy: 6)] // 日付の6文字目にある月の十の位を抽出
+                        if dateMonth == "0" { // 日の十の位が0の場合は表示しない
+                            cell.label_list_date_month.text = "\(d[d.index(d.startIndex, offsetBy: 6)..<d.index(d.startIndex, offsetBy: 7)])" // 「月」
+                        }else{
+                            cell.label_list_date_month.text = "\(d[d.index(d.startIndex, offsetBy: 5)..<d.index(d.startIndex, offsetBy: 7)])" // 「月」
+                        }
                     }
                 }else{
                     cell.label_list_date_month.text = "" // 注意：空白を代入しないと、変な値が入る。
@@ -424,7 +458,7 @@ class TableViewControllerJournals: UITableViewController, UIGestureRecognizerDel
     override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
         switch indexPath.section {
             // 選択不可にしたい場合は"nil"を返す
-            case 12:
+        case 1:
                 return nil
             default:
                 return indexPath
@@ -465,7 +499,7 @@ class TableViewControllerJournals: UITableViewController, UIGestureRecognizerDel
     }
     // 削除機能 セルを左へスワイプ
     override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        if indexPath.section != 12 {
+        if indexPath.section != 1 {
 //        print("選択されたセルを取得: \(indexPath.section), \(indexPath.row)") //  1行目 [4, 0] となる　7月の仕訳データはsection4だから
             // スタイルには、normal と　destructive がある
             let action = UIContextualAction(style: .destructive, title: "削除") { (action, view, completionHandler) in
@@ -496,7 +530,10 @@ class TableViewControllerJournals: UITableViewController, UIGestureRecognizerDel
             let objects = dataBaseManager.getJournalEntry(section: indexPath.section) // 何月のセクションに表示するセルかを判別するため引数で渡す
             print(objects)
             if indexPath.row >= objects.count {
-                let objectss = dataBaseManager.getJournalAdjustingEntry(section: indexPath.section) // 決算整理仕訳
+                // 設定操作
+                let dataBaseManagerSettingsOperating = DataBaseManagerSettingsOperating()
+                let object = dataBaseManagerSettingsOperating.getSettingsOperating()
+                let objectss = dataBaseManager.getJournalAdjustingEntry(section: indexPath.section, EnglishFromOfClosingTheLedger0: object!.EnglishFromOfClosingTheLedger0, EnglishFromOfClosingTheLedger1: object!.EnglishFromOfClosingTheLedger1) // 決算整理仕訳 損益振替仕訳 資本振替仕訳
                 // 決算整理仕訳データを削除
                 let result = dataBaseManager.deleteAdjustingJournalEntry(number: objectss[indexPath.row-objects.count].number)
                 if result == true {
@@ -526,7 +563,9 @@ class TableViewControllerJournals: UITableViewController, UIGestureRecognizerDel
             }
         }else{
             // インセットを設定する　ステータスバーとナビゲーションバーより下からテーブルビューを配置するため
-            scrollView.contentInset = UIEdgeInsets(top: +self.navigationController!.navigationBar.bounds.height+UIApplication.shared.statusBarFrame.height, left: 0, bottom: 0, right: 0)
+//            scrollView.contentInset = UIEdgeInsets(top: +self.navigationController!.navigationBar.bounds.height+UIApplication.shared.statusBarFrame.height, left: 0, bottom: 0, right: 0)
+            // インセットを設定する　ステータスバーとナビゲーションバーより下からテーブルビューを配置するため
+            scrollView.contentInset = UIEdgeInsets(top: +(UIApplication.shared.statusBarFrame.height+self.navigationController!.navigationBar.bounds.height), left: 0, bottom: (self.tabBarController?.tabBar.frame.size.height)!, right: 0)
         }
     }
     

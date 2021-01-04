@@ -10,6 +10,7 @@ import UIKit
 
 class TableViewCellTotalOfBigCategory: UITableViewCell {
 
+    @IBOutlet var label_totalOfBigCategory_previous: UILabel!
     @IBOutlet weak var label_totalOfBigCategory: UILabel!
     
     override func awakeFromNib() {

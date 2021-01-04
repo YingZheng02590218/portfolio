@@ -10,6 +10,7 @@ import UIKit
 
 class TableViewCellAccount: UITableViewCell {
 
+    @IBOutlet weak var label_account_previous: UILabel!
     @IBOutlet weak var label_account: UILabel!
     
     override func awakeFromNib() {

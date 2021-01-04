@@ -18,9 +18,14 @@ class TableViewControllerSettingsPeriod: UITableViewController, UIPopoverPresent
     // テスト用広告ユニットID
     let TEST_ID = "ca-app-pub-3940256099942544/2934735716"
     // true:テスト
-    let AdMobTest:Bool = false
+    let AdMobTest:Bool = true
     @IBOutlet var gADBannerView: GADBannerView!
-
+    // 広告ユニットID
+    let AdMobIDi = "ca-app-pub-7616440336243237/4964823000" // インタースティシャル
+    // テスト用広告ユニットID
+    let TEST_IDi = "ca-app-pub-3940256099942544/4411468910" // インタースティシャル
+    @IBOutlet var interstitial: GADInterstitial!
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,7 +34,7 @@ class TableViewControllerSettingsPeriod: UITableViewController, UIPopoverPresent
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        // 年度を追加後に会計期間画面を更新する
+        
         tableView.reloadData()
         // 要素数が少ないUITableViewで残りの部分や余白を消す
         let tableFooterView = UIView(frame: CGRect.zero)
@@ -58,6 +63,26 @@ class TableViewControllerSettingsPeriod: UITableViewController, UIPopoverPresent
         // GADBannerView を作成する
 //        addBannerViewToView(gADBannerView, constant: 0)
         addBannerViewToView(gADBannerView, constant: tableView.visibleCells[tableView.visibleCells.count-1].frame.height * -1)
+        // マネタイズ対応　注意：viewDidLoad()ではなく、viewWillAppear()に実装すること
+        // GADBannerView プロパティを設定する
+        if AdMobTest {
+            // GADInterstitial を作成する
+            interstitial = GADInterstitial(adUnitID: TEST_IDi)
+        }
+        else{
+            interstitial = GADInterstitial(adUnitID: AdMobIDi)
+        }
+        let request = GADRequest()
+        interstitial.load(request)
+    }
+    // インタースティシャル広告を表示　マネタイズ対応
+    func showAd() {
+        // 年度を追加後に会計期間画面を更新する
+        tableView.reloadData()
+        // マネタイズ対応
+        if self.interstitial.isReady {
+            self.interstitial.present(fromRootViewController: self)
+        }
     }
     
     func addBannerViewToView(_ bannerView: GADBannerView, constant: CGFloat) {
@@ -100,76 +125,144 @@ class TableViewControllerSettingsPeriod: UITableViewController, UIPopoverPresent
     }
     // 前準備
     override func prepare (for segue: UIStoryboardSegue, sender: Any?) {
-        // セグエのポップオーバー接続先を取得
-        let popoverCtrl = segue.destination.popoverPresentationController
-        // 呼び出し元がUIButtonの場合
-        if sender is UIButton {
-            // タップされたボタンの領域を取得
-            popoverCtrl?.sourceRect = (sender as! UIButton).bounds
+        // セグエで場合分け
+        if segue.identifier == "identifier_theDayOfReckoning"{ // 決算日設定
+            // segue.destinationの型はUIViewController
+            let tableViewControllerSettingsTheDayOfReckoning = segue.destination as! TableViewControllerSettingsTheDayOfReckoning
+            // 選択されたセルを取得
+            let indexPath: IndexPath = self.tableView.indexPathForSelectedRow! // ※ didSelectRowAtの代わりにこれを使う方がいい　タップされたセルの位置を取得
+            // 遷移先のコントローラに値を渡す
+            if indexPath.row == 0 {
+                tableViewControllerSettingsTheDayOfReckoning.month = true // 決算日　月
+            }else if indexPath.row == 1 {
+                tableViewControllerSettingsTheDayOfReckoning.month = false // 決算日　日
+            }
+        }else{
+            // セグエのポップオーバー接続先を取得
+            let popoverCtrl = segue.destination.popoverPresentationController
+            // 呼び出し元がUIButtonの場合
+            if sender is UIButton {
+                // タップされたボタンの領域を取得
+                popoverCtrl?.sourceRect = (sender as! UIButton).bounds
+            }
+            // デリゲートを自分自身に設定
+            popoverCtrl?.delegate = self
         }
-        // デリゲートを自分自身に設定
-        popoverCtrl?.delegate = self
     }
     
     // MARK: - Table view data source
     
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        return 1
+        return 2
     }
     // セクションヘッダーのテキスト決める
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         switch section {
         case 0:
-            return "会計年度を選択"
+            return "決算日"
+        case 1:
+            return "会計年度"
+        default:
+            return ""
+        }
+    }
+    // セクションフッターのテキスト決める
+    override func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
+        switch section {
+        case 0:
+            return "決算日は、財務諸表や仕訳帳、精算表、試算表に表示されます。"
         default:
             return ""
         }
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // データベース
-        let dataBaseManager = DataBaseManagerPeriod() 
-        let counts = dataBaseManager.getMainBooksAllCount()
-        return counts
+        switch section {
+        case 0:
+            // 決算日
+            return 2
+        case 1:
+            // 会計年度
+            let dataBaseManager = DataBaseManagerSettingsPeriod()
+            let counts = dataBaseManager.getMainBooksAllCount()
+            return counts
+        default:
+            return 0
+        }
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
-        // データベース
-        let dataBaseManager = DataBaseManagerPeriod()
-        // データベースから取得
-        let objects = dataBaseManager.getMainBooksAll()
-        // 会計帳簿の年度をセルに表示する
-        cell.textLabel?.text = " \(objects[indexPath.row].fiscalYear as Int)"
-//        cell.textLabel?.text = "2023 年度" // ToDo
-        cell.textLabel?.textAlignment = .center
-        // 会計帳簿の連番
-        cell.tag = objects[indexPath.row].number
-        // 開いている帳簿にチェックマークをつける
-        if objects[indexPath.row].openOrClose {
-            // チェックマークを入れる
-            cell.accessoryType = .checkmark
-        }else {
-            // チェックマークを外す
-            cell.accessoryType = .none
+        switch indexPath.section {
+        case 0:
+            // 決算日
+            let cell = tableView.dequeueReusableCell(withIdentifier: "identifier_theDayOfReckoning", for: indexPath)
+            let dataBaseManager = DataBaseManagerSettingsPeriod()
+            let object = dataBaseManager.getTheDayOfReckoning()
+            // 会計帳簿の年度をセルに表示する
+            if indexPath.row == 0 {
+                cell.textLabel?.text = "月"
+                let d = object
+                let date = d[d.index(d.startIndex, offsetBy: 0)..<d.index(d.startIndex, offsetBy: 2)] // 日付の9文字目にある日の十の位を抽出
+                cell.detailTextLabel?.text = "\(date)"
+                print(date)
+            }else {
+                cell.textLabel?.text = "日"
+                let d = object
+                let date = d[d.index(d.startIndex, offsetBy: 3)..<d.index(d.startIndex, offsetBy: 5)] // 日付の9文字目にある日の十の位を抽出
+                cell.detailTextLabel?.text = "\(date)"
+                print(date)
+            }
+            // 詳細テキストラベル
+            cell.detailTextLabel?.textColor = .lightGray
+            return cell
+        case 1:
+            // 会計年度
+            let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
+            // データベース
+            let dataBaseManager = DataBaseManagerSettingsPeriod()
+            let objects = dataBaseManager.getMainBooksAll()
+            // 会計帳簿の年度をセルに表示する
+            cell.textLabel?.text = " \(objects[indexPath.row].fiscalYear as Int)"
+            cell.textLabel?.textAlignment = .center
+            // 会計帳簿の連番
+            cell.tag = objects[indexPath.row].number
+            // 開いている帳簿にチェックマークをつける
+            if objects[indexPath.row].openOrClose {
+                // チェックマークを入れる
+                cell.accessoryType = .checkmark
+            }else {
+                // チェックマークを外す
+                cell.accessoryType = .none
+            }
+            return cell
+        default:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
+            return cell
         }
-        return cell
     }
     // セルが選択された時に呼び出される
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let cell = tableView.cellForRow(at:indexPath)
-        // チェックマークを入れる
-        cell?.accessoryType = .checkmark
-        // ここからデータベースを更新する
-        pickAccountingBook(tag: cell!.tag) //会計帳簿の連番
-        // 年度を選択時に会計期間画面を更新する
-        tableView.reloadData()
+        switch indexPath.section {
+        case 1:
+            // 会計年度
+            let cell = tableView.cellForRow(at:indexPath)
+            // チェックマークを入れる
+            cell?.accessoryType = .checkmark
+            // ここからデータベースを更新する
+            pickAccountingBook(tag: cell!.tag) //会計帳簿の連番
+            // 年度を選択時に会計期間画面を更新する
+            tableView.reloadData()
+            break
+        default:
+            print("")
+            break
+        }
     }
     // チェックマークの切り替え　データベースを更新
     func pickAccountingBook(tag: Int) {
         // データベース
-        let databaseManager = DataBaseManagerPeriod()
+        let databaseManager = DataBaseManagerSettingsPeriod()
         databaseManager.setMainBooksOpenOrClose(tag: tag)
         // 帳簿の年度を切り替えた場合、設定勘定科目と勘定の勘定科目を比較して、不足している勘定を追加する　2020/11/08
         let dataBaseManagerAccount = DataBaseManagerAccount()
@@ -177,9 +270,11 @@ class TableViewControllerSettingsPeriod: UITableViewController, UIPopoverPresent
     }
     // セルの選択が外れた時に呼び出される
     override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        let cell = tableView.cellForRow(at:indexPath)
-        // チェックマークを外す
-        cell?.accessoryType = .none
+        if indexPath.section == 1 {
+            let cell = tableView.cellForRow(at:indexPath)
+            // チェックマークを外す
+            cell?.accessoryType = .none
+        }
     }
     // 削除機能 セルを左へスワイプ
     override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
@@ -203,7 +298,7 @@ class TableViewControllerSettingsPeriod: UITableViewController, UIPopoverPresent
             (action: UIAlertAction!) in
             print("OK アクションをタップした時の処理")
             // データベース
-            let dataBaseManagerPeriod = DataBaseManagerPeriod()
+            let dataBaseManagerPeriod = DataBaseManagerSettingsPeriod()
             let objects = dataBaseManagerPeriod.getMainBooksAll()
             if objects.count > 1 {
                 // 会計帳簿を削除

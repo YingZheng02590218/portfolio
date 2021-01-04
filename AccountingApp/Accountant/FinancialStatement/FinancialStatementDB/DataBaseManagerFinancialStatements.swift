@@ -93,8 +93,8 @@ class DataBaseManagerFinancialStatements: DataBaseManager {
     func getFinancialStatements() -> DataBaseFinancialStatements {
         let realm = try! Realm()
         // 開いている会計帳簿の年度を取得
-        let dataBaseManagerPeriod = DataBaseManagerPeriod()
-        let object = dataBaseManagerPeriod.getSettingsPeriod()
+        let dataBaseManagerPeriod = DataBaseManagerSettingsPeriod()
+        let object = dataBaseManagerPeriod.getSettingsPeriod(lastYear: false)
         let fiscalYear: Int = object.dataBaseJournals!.fiscalYear
         var objects = realm.objects(DataBaseFinancialStatements.self)
         objects = objects.filter("fiscalYear == \(fiscalYear)")

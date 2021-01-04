@@ -19,18 +19,20 @@
 	<key>STORAGE_BUCKET</key>
 	<string>accountant-2020.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
-	<false/>
+	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
-	<false/>
+	<false></false>
 	<key>IS_APPINVITE_ENABLED</key>
-	<true/>
+	<true></true>
 	<key>IS_GCM_ENABLED</key>
-	<true/>
+	<true></true>
 	<key>IS_SIGNIN_ENABLED</key>
-	<true/>
+	<true></true>
 	<key>GOOGLE_APP_ID</key>
 	<string>1:722084530886:ios:6e3a94ae3ccb2684ce25c7</string>
 	<key>DATABASE_URL</key>
 	<string>https://accountant-2020.firebaseio.com</string>
+	<key>ADMOB_APP_ID</key>
+	<string>ca-app-pub-7616440336243237~2009069753</string>
 </dict>
 </plist>

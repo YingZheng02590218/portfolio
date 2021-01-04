@@ -19,23 +19,17 @@ class TableViewControllerBS: UITableViewController, UIPrintInteractionController
     // テスト用広告ユニットID
     let TEST_ID = "ca-app-pub-3940256099942544/2934735716"
     // true:テスト
-    let AdMobTest:Bool = false
+    let AdMobTest:Bool = true
     @IBOutlet var gADBannerView: GADBannerView!
 
     @IBOutlet weak var label_company_name: UILabel!
     @IBOutlet weak var label_title: UILabel!
     @IBOutlet weak var label_closingDate: UILabel!
-
+    @IBOutlet var label_closingDate_previous: UILabel!
+    @IBOutlet var label_closingDate_thisYear: UILabel!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        // 月末、年度末などの決算日をラベルに表示する
-        let dataBaseManagerAccountingBooksShelf = DataBaseManagerAccountingBooksShelf()
-        let company = dataBaseManagerAccountingBooksShelf.getCompanyName()
-        label_company_name.text = company // 社名
-        let dataBaseManagerPeriod = DataBaseManagerPeriod()
-        let fiscalYear = dataBaseManagerPeriod.getSettingsPeriodYear()
-        label_closingDate.text = String(fiscalYear+1) + "年3月31日" // 決算日を表示する
-        label_title.text = "貸借対照表"
         
         let refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: Selector(("refreshTable")), for: UIControl.Event.valueChanged)
@@ -43,6 +37,24 @@ class TableViewControllerBS: UITableViewController, UIPrintInteractionController
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        // 月末、年度末などの決算日をラベルに表示する
+        let dataBaseManagerAccountingBooksShelf = DataBaseManagerAccountingBooksShelf()
+        let company = dataBaseManagerAccountingBooksShelf.getCompanyName()
+        label_company_name.text = company // 社名
+        let dataBaseManagerPeriod = DataBaseManagerSettingsPeriod()
+        let fiscalYear = dataBaseManagerPeriod.getSettingsPeriodYear()
+        let dataBaseManager = DataBaseManagerSettingsPeriod()
+        let object = dataBaseManager.getTheDayOfReckoning()
+        if object == "12/31" { // 会計期間が年をまたがない場合
+            label_closingDate.text = String(fiscalYear) + "年\(object.prefix(2))月\(object.suffix(2))日" // 決算日を表示する
+            label_closingDate_previous.text = "前年度\n(" + String(fiscalYear-1) + "年\(object.prefix(2))月\(object.suffix(2))日)" // 前年度　決算日を表示する
+            label_closingDate_thisYear.text = "今年度\n(" + String(fiscalYear) + "年\(object.prefix(2))月\(object.suffix(2))日)" // 今年度　決算日を表示する
+        }else {
+            label_closingDate.text = String(fiscalYear+1) + "年\(object.prefix(2))月\(object.suffix(2))日" // 決算日を表示する
+            label_closingDate_previous.text = "前年度\n(" + String(fiscalYear) + "年\(object.prefix(2))月\(object.suffix(2))日)" // 前年度　決算日を表示する
+            label_closingDate_thisYear.text = "今年度\n(" + String(fiscalYear+1) + "年\(object.prefix(2))月\(object.suffix(2))日)" // 今年度　決算日を表示する
+        }
+        label_title.text = "貸借対照表"
         // 貸借対照表　計算
         dataBaseManagerBS.initializeBS()
         // テーブルをスクロールさせる。scrollViewDidScrollメソッドを呼び出して、インセットの設定を行うため。
@@ -94,16 +106,16 @@ class TableViewControllerBS: UITableViewController, UIPrintInteractionController
     
     @objc func refreshTable() {
         // 全勘定の合計と残高を計算する
-        let databaseManager = DataBaseManagerTB()
-        databaseManager.setAllAccountTotal()
-        databaseManager.calculateAmountOfAllAccount() // 合計額を計算
+//        let databaseManager = DataBaseManagerTB()
+//        databaseManager.setAllAccountTotal()
+//        databaseManager.calculateAmountOfAllAccount() // 合計額を計算
         // 貸借対照表　初期化　再計算
         dataBaseManagerBS.initializeBS()
         //精算表　借方合計と貸方合計の計算 (修正記入、損益計算書、貸借対照表)
-        let databaseManagerWS = DataBaseManagerWS()
-        databaseManagerWS.calculateAmountOfAllAccount()
-        databaseManagerWS.calculateAmountOfAllAccountForBS()
-        databaseManagerWS.calculateAmountOfAllAccountForPL()
+//        let databaseManagerWS = DataBaseManagerWS()
+//        databaseManagerWS.calculateAmountOfAllAccount()
+//        databaseManagerWS.calculateAmountOfAllAccountForBS()
+//        databaseManagerWS.calculateAmountOfAllAccountForPL()
         // 更新処理
         self.tableView.reloadData()
         // クルクルを止める
@@ -191,7 +203,9 @@ class TableViewControllerBS: UITableViewController, UIPrintInteractionController
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         // データベース
         let dataBaseManagerSettingsTaxonomy = DataBaseManagerSettingsTaxonomy()
-        
+        // 開いている会計帳簿の年度を取得
+        let dataBaseManagerPeriod = DataBaseManagerSettingsPeriod()
+
         switch indexPath.section {
 //大区分
         case 0: // 資産の部
@@ -217,7 +231,7 @@ class TableViewControllerBS: UITableViewController, UIPrintInteractionController
                 cell.textLabel?.adjustsFontSizeToFitWidth = true
                 cell.textLabel?.text = "    流動資産合計"
                 print("BS", indexPath.row, "    流動資産合計"+"★")
-                let text:String = dataBaseManagerBS.getTotalRank0(big5: indexPath.section, rank0: 0)
+                let text:String = dataBaseManagerBS.getTotalRank0(big5: indexPath.section, rank0: 0, lastYear: false)
                 // テキストをカスタマイズするために、NSMutableAttributedStringにする
                 let attributeText = NSMutableAttributedString(string: text)
                 // styleをunderLineに。valueをrawValueに。該当箇所を0-text.count文字目まで
@@ -227,6 +241,21 @@ class TableViewControllerBS: UITableViewController, UIPrintInteractionController
                   range: NSMakeRange(0, text.count)
                 )
                 cell.label_totalOfMiddleCategory.attributedText = attributeText
+                var textt:String = ""
+                if dataBaseManagerPeriod.checkSettingsPeriod() { // 前年度の会計帳簿の存在有無を確認
+                    textt = dataBaseManagerBS.getTotalRank0(big5: indexPath.section, rank0: 0, lastYear: true)
+                }else {
+                    textt = "-"
+                }
+                // テキストをカスタマイズするために、NSMutableAttributedStringにする
+                let attributeTextt = NSMutableAttributedString(string: textt)
+                // styleをunderLineに。valueをrawValueに。該当箇所を0-text.count文字目まで
+                attributeTextt.addAttribute(
+                  NSAttributedString.Key.underlineStyle,
+                  value: NSUnderlineStyle.single.rawValue,
+                  range: NSMakeRange(0, textt.count)
+                )
+                cell.label_totalOfMiddleCategory_previous.attributedText = attributeTextt
                 return cell
             case objects0100.count + 1 + 1:
                 let cell = tableView.dequeueReusableCell(withIdentifier: "middleCategory", for: indexPath)
@@ -263,7 +292,7 @@ class TableViewControllerBS: UITableViewController, UIPrintInteractionController
                 cell.textLabel?.adjustsFontSizeToFitWidth = true
                 cell.textLabel?.text = "    固定資産合計"
                 print("BS", indexPath.row, "    固定資産合計"+"★")
-                let text:String = dataBaseManagerBS.getTotalRank0(big5: indexPath.section, rank0: 1)
+                let text:String = dataBaseManagerBS.getTotalRank0(big5: indexPath.section, rank0: 1, lastYear: false)
                 // テキストをカスタマイズするために、NSMutableAttributedStringにする
                 let attributeText = NSMutableAttributedString(string: text)
                 // styleをunderLineに。valueをrawValueに。該当箇所を0-text.count文字目まで
@@ -273,6 +302,21 @@ class TableViewControllerBS: UITableViewController, UIPrintInteractionController
                   range: NSMakeRange(0, text.count)
                 )
                 cell.label_totalOfMiddleCategory.attributedText = attributeText
+                var textt:String = ""
+                if dataBaseManagerPeriod.checkSettingsPeriod() { // 前年度の会計帳簿の存在有無を確認
+                    textt = dataBaseManagerBS.getTotalRank0(big5: indexPath.section, rank0: 1, lastYear: true)
+                }else {
+                    textt = "-"
+                }
+                // テキストをカスタマイズするために、NSMutableAttributedStringにする
+                let attributeTextt = NSMutableAttributedString(string: textt)
+                // styleをunderLineに。valueをrawValueに。該当箇所を0-text.count文字目まで
+                attributeTextt.addAttribute(
+                  NSAttributedString.Key.underlineStyle,
+                  value: NSUnderlineStyle.single.rawValue,
+                  range: NSMakeRange(0, textt.count)
+                )
+                cell.label_totalOfMiddleCategory_previous.attributedText = attributeTextt
                 return cell
             case objects0100.count + 1 + 1 + objects3.count  + 1 + objects4.count  + 1 + objects5.count  + 1 + 1 + 1:
                 let cell = tableView.dequeueReusableCell(withIdentifier: "middleCategory", for: indexPath)
@@ -287,7 +331,7 @@ class TableViewControllerBS: UITableViewController, UIPrintInteractionController
                 cell.textLabel?.adjustsFontSizeToFitWidth = true
                 cell.textLabel?.text = "    繰越資産合計"
                 print("BS", indexPath.row, "    繰越資産合計"+"★")
-                let text:String = dataBaseManagerBS.getTotalRank0(big5: indexPath.section, rank0: 2)
+                let text:String = dataBaseManagerBS.getTotalRank0(big5: indexPath.section, rank0: 2, lastYear: false)
                 // テキストをカスタマイズするために、NSMutableAttributedStringにする
                 let attributeText = NSMutableAttributedString(string: text)
                 // styleをunderLineに。valueをrawValueに。該当箇所を0-text.count文字目まで
@@ -297,13 +341,28 @@ class TableViewControllerBS: UITableViewController, UIPrintInteractionController
                   range: NSMakeRange(0, text.count)
                 )
                 cell.label_totalOfMiddleCategory.attributedText = attributeText
+                var textt:String = ""
+                if dataBaseManagerPeriod.checkSettingsPeriod() { // 前年度の会計帳簿の存在有無を確認
+                    textt = dataBaseManagerBS.getTotalRank0(big5: indexPath.section, rank0: 2, lastYear: true)
+                }else {
+                    textt = "-"
+                }
+                // テキストをカスタマイズするために、NSMutableAttributedStringにする
+                let attributeTextt = NSMutableAttributedString(string: textt)
+                // styleをunderLineに。valueをrawValueに。該当箇所を0-text.count文字目まで
+                attributeTextt.addAttribute(
+                  NSAttributedString.Key.underlineStyle,
+                  value: NSUnderlineStyle.single.rawValue,
+                  range: NSMakeRange(0, textt.count)
+                )
+                cell.label_totalOfMiddleCategory_previous.attributedText = attributeTextt
                 return cell
             case objects0100.count + 1 + 1 + objects3.count  + 1 + objects4.count  + 1 + objects5.count  + 1 + 1 + 1 + objects0102.count + 1 + 1: //最後の行
                 let cell = tableView.dequeueReusableCell(withIdentifier: "totalOfBigCategory", for: indexPath) as! TableViewCellTotalOfBigCategory
                 cell.textLabel?.text = "資産合計"
                 print("BS", indexPath.row, "資産合計"+"★")
                 cell.textLabel?.font = UIFont.boldSystemFont(ofSize: 15)
-                let text:String = dataBaseManagerBS.getTotalBig5(big5: 0)
+                let text:String = dataBaseManagerBS.getTotalBig5(big5: 0, lastYear: false)
                 // テキストをカスタマイズするために、NSMutableAttributedStringにする
                 let attributeText = NSMutableAttributedString(string: text)
                 // styleをunderLineに。valueをrawValueに。該当箇所を0-text.count文字目まで
@@ -313,9 +372,25 @@ class TableViewControllerBS: UITableViewController, UIPrintInteractionController
                   range: NSMakeRange(0, text.count)
                 )
                 cell.label_totalOfBigCategory.attributedText = attributeText
-                cell.label_totalOfBigCategory.font = UIFont.boldSystemFont(ofSize: 15)
+                cell.label_totalOfBigCategory.font = UIFont.boldSystemFont(ofSize: 14)
+                var textt:String = ""
+                if dataBaseManagerPeriod.checkSettingsPeriod() { // 前年度の会計帳簿の存在有無を確認
+                    textt = dataBaseManagerBS.getTotalBig5(big5: 0, lastYear: true)
+                }else {
+                    textt = "-"
+                }
+                // テキストをカスタマイズするために、NSMutableAttributedStringにする
+                let attributeTextt = NSMutableAttributedString(string: textt)
+                // styleをunderLineに。valueをrawValueに。該当箇所を0-text.count文字目まで
+                attributeTextt.addAttribute(
+                  NSAttributedString.Key.underlineStyle,
+                  value: NSUnderlineStyle.single.rawValue,
+                  range: NSMakeRange(0, textt.count)
+                )
+                cell.label_totalOfBigCategory_previous.attributedText = attributeTextt
+                cell.label_totalOfBigCategory_previous.font = UIFont.boldSystemFont(ofSize: 14)
                 // 資産合計と純資産負債合計の金額が不一致の場合、文字色を赤
-                if dataBaseManagerBS.getTotalBig5(big5: 0) != dataBaseManagerBS.getTotalBig5(big5: 3) {
+                if dataBaseManagerBS.getTotalBig5(big5: 0, lastYear: false) != dataBaseManagerBS.getTotalBig5(big5: 3, lastYear: false) {
                     cell.label_totalOfBigCategory.textColor = .red
                 }else {
                     // ダークモード対応
@@ -338,34 +413,59 @@ class TableViewControllerBS: UITableViewController, UIPrintInteractionController
                              indexPath.row <  objects0100.count + 1 + 1 {   // 流動資産合計　　　　中区分タイトル + 流動資産 + 合計
                         cell.textLabel?.text = "        "+objects0100[indexPath.row-(1)].category
                         print("BS", indexPath.row, "        "+objects0100[indexPath.row-(1)].category)
-                        cell.label_account.text = dataBaseManagerTaxonomy.getTotalOfTaxonomy(numberOfSettingsTaxonomy: objects0100[indexPath.row-(1 )].number) // 勘定別の合計　計算
+                        cell.label_account.text = dataBaseManagerTaxonomy.getTotalOfTaxonomy(numberOfSettingsTaxonomy: objects0100[indexPath.row-(1 )].number, lastYear: false) // 勘定別の合計　計算
+                        if dataBaseManagerPeriod.checkSettingsPeriod() { // 前年度の会計帳簿の存在有無を確認
+                            cell.label_account_previous.text = dataBaseManagerTaxonomy.getTotalOfTaxonomy(numberOfSettingsTaxonomy: objects0100[indexPath.row-(1 )].number, lastYear: true) // 勘定別の合計　計算
+                        }else {
+                            cell.label_account_previous.text = "-"
+                        }
                         cell.label_account.textAlignment = .right
                         
                     }else if indexPath.row >= objects0100.count + 1 + 1 + 1 + 1 &&  // 有形固定資産タイトルの1行下
                               indexPath.row <  objects0100.count + 1 + 1 + 1 + objects3.count + 1 { // 無形固定資産
                         cell.textLabel?.text = "        "+objects3[indexPath.row-(objects0100.count + 1 + 1 + 1 + 1)].category
                         print("BS", indexPath.row, "        "+objects3[indexPath.row-(objects0100.count + 1 + 1 + 1 + 1)].category)
-                        cell.label_account.text = dataBaseManagerTaxonomy.getTotalOfTaxonomy(numberOfSettingsTaxonomy: objects3[indexPath.row-(objects0100.count + 1 + 1 + 1 + 1)].number)
+                        cell.label_account.text = dataBaseManagerTaxonomy.getTotalOfTaxonomy(numberOfSettingsTaxonomy: objects3[indexPath.row-(objects0100.count + 1 + 1 + 1 + 1)].number, lastYear: false)
+                        if dataBaseManagerPeriod.checkSettingsPeriod() { // 前年度の会計帳簿の存在有無を確認
+                            cell.label_account_previous.text = dataBaseManagerTaxonomy.getTotalOfTaxonomy(numberOfSettingsTaxonomy: objects3[indexPath.row-(objects0100.count + 1 + 1 + 1 + 1)].number, lastYear: true)
+                        }else {
+                            cell.label_account_previous.text = "-"
+                        }
                         cell.label_account.textAlignment = .right
                         
                     }else if indexPath.row >= objects0100.count + 1 + 1 + 1 + objects3.count + 1 + 1 && // 無形固定資産タイトルの1行下
                               indexPath.row <  objects0100.count + 1 + 1 + 1 + objects3.count + 1 + objects4.count + 1 { // 投資その他資産
                         cell.textLabel?.text = "        "+objects4[indexPath.row-(objects0100.count + 1 + 1 + 1 + objects3.count + 1 + 1)].category
                         print("BS", indexPath.row, "        "+objects4[indexPath.row-(objects0100.count + 1 + 1 + 1 + objects3.count + 1 + 1)].category)
-                        cell.label_account.text = dataBaseManagerTaxonomy.getTotalOfTaxonomy(numberOfSettingsTaxonomy: objects4[indexPath.row-(objects0100.count + 1 + 1 + 1 + objects3.count + 1 + 1)].number)
+                        cell.label_account.text = dataBaseManagerTaxonomy.getTotalOfTaxonomy(numberOfSettingsTaxonomy: objects4[indexPath.row-(objects0100.count + 1 + 1 + 1 + objects3.count + 1 + 1)].number, lastYear: false)
+                        if dataBaseManagerPeriod.checkSettingsPeriod() { // 前年度の会計帳簿の存在有無を確認
+                            cell.label_account_previous.text = dataBaseManagerTaxonomy.getTotalOfTaxonomy(numberOfSettingsTaxonomy: objects4[indexPath.row-(objects0100.count + 1 + 1 + 1 + objects3.count + 1 + 1)].number, lastYear: true)
+                        }else {
+                            cell.label_account_previous.text = "-"
+                        }
                         cell.label_account.textAlignment = .right
                         
                     }else if indexPath.row >= objects0100.count + 1 + 1 + 1 + objects3.count + 1 + objects4.count + 1 + 1 && // 投資その他資産タイトルの1行下
                               indexPath.row <  objects0100.count + 1 + 1 + objects3.count  + 1 + objects4.count  + 1 + objects5.count  + 1 + 1 { // 固定資産合計
                         cell.textLabel?.text = "        "+objects5[indexPath.row-(objects0100.count + 1 + 1 + 1 + objects3.count + 1 + objects4.count + 1 + 1)].category
                         print("BS", indexPath.row, "        "+objects5[indexPath.row-(objects0100.count + 1 + 1 + 1 + objects3.count + 1 + objects4.count + 1 + 1)].category)
-                        cell.label_account.text = dataBaseManagerTaxonomy.getTotalOfTaxonomy(numberOfSettingsTaxonomy: objects5[indexPath.row-(objects0100.count + 1 + 1 + 1 + objects3.count + 1 + objects4.count + 1 + 1)].number)
+                        cell.label_account.text = dataBaseManagerTaxonomy.getTotalOfTaxonomy(numberOfSettingsTaxonomy: objects5[indexPath.row-(objects0100.count + 1 + 1 + 1 + objects3.count + 1 + objects4.count + 1 + 1)].number, lastYear: false)
+                        if dataBaseManagerPeriod.checkSettingsPeriod() { // 前年度の会計帳簿の存在有無を確認
+                            cell.label_account_previous.text = dataBaseManagerTaxonomy.getTotalOfTaxonomy(numberOfSettingsTaxonomy: objects5[indexPath.row-(objects0100.count + 1 + 1 + 1 + objects3.count + 1 + objects4.count + 1 + 1)].number, lastYear: true)
+                        }else {
+                            cell.label_account_previous.text = "-"
+                        }
                         cell.label_account.textAlignment = .right
                     }else if indexPath.row >= objects0100.count + 1 + 1 + objects3.count  + 1 + objects4.count  + 1 + objects5.count  + 1 + 1 + 1 + 1 && // 繰延資産タイトルの1行下
                               indexPath.row < objects0100.count + 1 + 1 + objects3.count  + 1 + objects4.count  + 1 + objects5.count  + 1 + 1 + 1 + objects0102.count + 1 { // 繰延資産合計
                         cell.textLabel?.text = "        "+objects0102[indexPath.row-(objects0100.count + 1 + 1 + objects3.count  + 1 + objects4.count  + 1 + objects5.count  + 1 + 1 + 1 + 1)].category
                         print("BS", indexPath.row, "        "+objects0102[indexPath.row-(objects0100.count + 1 + 1 + objects3.count  + 1 + objects4.count  + 1 + objects5.count  + 1 + 1 + 1 + 1)].category)
-                        cell.label_account.text = dataBaseManagerTaxonomy.getTotalOfTaxonomy(numberOfSettingsTaxonomy: objects0102[indexPath.row-(objects0100.count + 1 + 1 + objects3.count  + 1 + objects4.count  + 1 + objects5.count  + 1 + 1 + 1 + 1)].number)
+                        cell.label_account.text = dataBaseManagerTaxonomy.getTotalOfTaxonomy(numberOfSettingsTaxonomy: objects0102[indexPath.row-(objects0100.count + 1 + 1 + objects3.count  + 1 + objects4.count  + 1 + objects5.count  + 1 + 1 + 1 + 1)].number, lastYear: false)
+                        if dataBaseManagerPeriod.checkSettingsPeriod() { // 前年度の会計帳簿の存在有無を確認
+                            cell.label_account_previous.text = dataBaseManagerTaxonomy.getTotalOfTaxonomy(numberOfSettingsTaxonomy: objects0102[indexPath.row-(objects0100.count + 1 + 1 + objects3.count  + 1 + objects4.count  + 1 + objects5.count  + 1 + 1 + 1 + 1)].number, lastYear: true)
+                        }else {
+                            cell.label_account_previous.text = "-"
+                        }
                         cell.label_account.textAlignment = .right
                     }else {
                         cell.textLabel?.text = "default"
@@ -394,7 +494,7 @@ class TableViewControllerBS: UITableViewController, UIPrintInteractionController
                 cell.textLabel?.adjustsFontSizeToFitWidth = true
                 cell.textLabel?.text = "    流動負債合計"
                 print("BS", indexPath.row, "    流動負債合計"+"★")
-                let text:String = dataBaseManagerBS.getTotalRank0(big5: indexPath.section, rank0: 3)
+                let text:String = dataBaseManagerBS.getTotalRank0(big5: indexPath.section, rank0: 3, lastYear: false)
                 // テキストをカスタマイズするために、NSMutableAttributedStringにする
                 let attributeText = NSMutableAttributedString(string: text)
                 // styleをunderLineに。valueをrawValueに。該当箇所を0-text.count文字目まで
@@ -404,6 +504,21 @@ class TableViewControllerBS: UITableViewController, UIPrintInteractionController
                   range: NSMakeRange(0, text.count)
                 )
                 cell.label_totalOfMiddleCategory.attributedText = attributeText
+                var textt:String = ""
+                if dataBaseManagerPeriod.checkSettingsPeriod() { // 前年度の会計帳簿の存在有無を確認
+                    textt = dataBaseManagerBS.getTotalRank0(big5: indexPath.section, rank0: 3, lastYear: true)
+                }else {
+                    textt = "-"
+                }
+                // テキストをカスタマイズするために、NSMutableAttributedStringにする
+                let attributeTextt = NSMutableAttributedString(string: textt)
+                // styleをunderLineに。valueをrawValueに。該当箇所を0-text.count文字目まで
+                attributeTextt.addAttribute(
+                  NSAttributedString.Key.underlineStyle,
+                  value: NSUnderlineStyle.single.rawValue,
+                  range: NSMakeRange(0, textt.count)
+                )
+                cell.label_totalOfMiddleCategory_previous.attributedText = attributeTextt
                 return cell
             case objects0114.count + 1 + 1: // 中分類名の分を1行追加 合計の行を追加
                 let cell = tableView.dequeueReusableCell(withIdentifier: "middleCategory", for: indexPath)
@@ -418,7 +533,7 @@ class TableViewControllerBS: UITableViewController, UIPrintInteractionController
                 cell.textLabel?.adjustsFontSizeToFitWidth = true
                 cell.textLabel?.text = "    固定負債合計"
                 print("BS", indexPath.row, "    固定負債合計"+"★")
-                let text:String = dataBaseManagerBS.getTotalRank0(big5: indexPath.section, rank0: 4)
+                let text:String = dataBaseManagerBS.getTotalRank0(big5: indexPath.section, rank0: 4, lastYear: false)
                 // テキストをカスタマイズするために、NSMutableAttributedStringにする
                 let attributeText = NSMutableAttributedString(string: text)
                 // styleをunderLineに。valueをrawValueに。該当箇所を0-text.count文字目まで
@@ -428,13 +543,28 @@ class TableViewControllerBS: UITableViewController, UIPrintInteractionController
                   range: NSMakeRange(0, text.count)
                 )
                 cell.label_totalOfMiddleCategory.attributedText = attributeText
+                var textt:String = ""
+                if dataBaseManagerPeriod.checkSettingsPeriod() { // 前年度の会計帳簿の存在有無を確認
+                    textt = dataBaseManagerBS.getTotalRank0(big5: indexPath.section, rank0: 4, lastYear: true)
+                }else {
+                    textt = "-"
+                }
+                // テキストをカスタマイズするために、NSMutableAttributedStringにする
+                let attributeTextt = NSMutableAttributedString(string: textt)
+                // styleをunderLineに。valueをrawValueに。該当箇所を0-text.count文字目まで
+                attributeTextt.addAttribute(
+                  NSAttributedString.Key.underlineStyle,
+                  value: NSUnderlineStyle.single.rawValue,
+                  range: NSMakeRange(0, textt.count)
+                )
+                cell.label_totalOfMiddleCategory_previous.attributedText = attributeTextt
                 return cell
             case objects0114.count + 1 + 1 + objectsCounts3.count + 1 + 1: //最後の行
                 let cell = tableView.dequeueReusableCell(withIdentifier: "totalOfBigCategory", for: indexPath) as! TableViewCellTotalOfBigCategory
                 cell.textLabel?.text = "負債合計"
                 print("BS", indexPath.row, "負債合計"+"★")
                 cell.textLabel?.font = UIFont.boldSystemFont(ofSize: 15)
-                let text:String = dataBaseManagerBS.getTotalBig5(big5: 1)
+                let text:String = dataBaseManagerBS.getTotalBig5(big5: 1, lastYear: false)
                 // テキストをカスタマイズするために、NSMutableAttributedStringにする
                 let attributeText = NSMutableAttributedString(string: text)
                 // styleをunderLineに。valueをrawValueに。該当箇所を0-text.count文字目まで
@@ -444,7 +574,23 @@ class TableViewControllerBS: UITableViewController, UIPrintInteractionController
                   range: NSMakeRange(0, text.count)
                 )
                 cell.label_totalOfBigCategory.attributedText = attributeText
-                cell.label_totalOfBigCategory.font = UIFont.boldSystemFont(ofSize: 15)
+                cell.label_totalOfBigCategory.font = UIFont.boldSystemFont(ofSize: 14)
+                var textt:String = ""
+                if dataBaseManagerPeriod.checkSettingsPeriod() { // 前年度の会計帳簿の存在有無を確認
+                    textt = dataBaseManagerBS.getTotalBig5(big5: 1, lastYear: true)
+                }else {
+                    textt = "-"
+                }
+                // テキストをカスタマイズするために、NSMutableAttributedStringにする
+                let attributeTextt = NSMutableAttributedString(string: textt)
+                // styleをunderLineに。valueをrawValueに。該当箇所を0-text.count文字目まで
+                attributeTextt.addAttribute(
+                  NSAttributedString.Key.underlineStyle,
+                  value: NSUnderlineStyle.single.rawValue,
+                  range: NSMakeRange(0, textt.count)
+                )
+                cell.label_totalOfBigCategory_previous.attributedText = attributeTextt
+                cell.label_totalOfBigCategory_previous.font = UIFont.boldSystemFont(ofSize: 14)
                 // ダークモード対応
                 if (UITraitCollection.current.userInterfaceStyle == .dark) {
                     /* ダークモード時の処理 */
@@ -465,12 +611,22 @@ class TableViewControllerBS: UITableViewController, UIPrintInteractionController
                              indexPath.row <  objects0114.count + 1 {  // 流動負債合計 中区分のタイトルより下の行から、中区分合計の行より上
                         cell.textLabel?.text = "        "+objects0114[indexPath.row-(1)].category
                         print("BS", indexPath.row, "        "+objects0114[indexPath.row-(1)].category)
-                        cell.label_account.text = dataBaseManagerTaxonomy.getTotalOfTaxonomy(numberOfSettingsTaxonomy: objects0114[indexPath.row-(1)].number)
+                        cell.label_account.text = dataBaseManagerTaxonomy.getTotalOfTaxonomy(numberOfSettingsTaxonomy: objects0114[indexPath.row-(1)].number, lastYear: false)
+                        if dataBaseManagerPeriod.checkSettingsPeriod() { // 前年度の会計帳簿の存在有無を確認
+                            cell.label_account_previous.text = dataBaseManagerTaxonomy.getTotalOfTaxonomy(numberOfSettingsTaxonomy: objects0114[indexPath.row-(1)].number, lastYear: true)
+                        }else {
+                            cell.label_account_previous.text = "-"
+                        }
                         cell.label_account.textAlignment = .right
                     }else if indexPath.row >= objects0114.count + 1 + 1 + 1 && // 固定負債タイトルの1行下
                               indexPath.row <  objects0114.count + 1 + 1 + objectsCounts3.count + 1 { // 固定負債合計
                         cell.textLabel?.text = "        "+objectsCounts3[indexPath.row-(objects0114.count + 1 + 1 + 1)].category
-                        cell.label_account.text = dataBaseManagerTaxonomy.getTotalOfTaxonomy(numberOfSettingsTaxonomy: objectsCounts3[indexPath.row-(objects0114.count + 1 + 1 + 1)].number)
+                        cell.label_account.text = dataBaseManagerTaxonomy.getTotalOfTaxonomy(numberOfSettingsTaxonomy: objectsCounts3[indexPath.row-(objects0114.count + 1 + 1 + 1)].number, lastYear: false)
+                        if dataBaseManagerPeriod.checkSettingsPeriod() { // 前年度の会計帳簿の存在有無を確認
+                            cell.label_account_previous.text = dataBaseManagerTaxonomy.getTotalOfTaxonomy(numberOfSettingsTaxonomy: objectsCounts3[indexPath.row-(objects0114.count + 1 + 1 + 1)].number, lastYear: true)
+                        }else {
+                            cell.label_account_previous.text = "-"
+                        }
                         cell.label_account.textAlignment = .right
                     }else {
                         cell.textLabel?.text = "default"
@@ -504,7 +660,7 @@ class TableViewControllerBS: UITableViewController, UIPrintInteractionController
                 cell.textLabel?.adjustsFontSizeToFitWidth = true
                 cell.textLabel?.text = "    株主資本合計"
                 print("BS", indexPath.row, "    株主資本合計"+"★")
-                let text:String = dataBaseManagerBS.getTotalRank1(big5: indexPath.section, rank1: 10) // 中区分の合計を取得
+                let text:String = dataBaseManagerBS.getTotalRank1(big5: indexPath.section, rank1: 10, lastYear: false) // 中区分の合計を取得
                 // テキストをカスタマイズするために、NSMutableAttributedStringにする
                 let attributeText = NSMutableAttributedString(string: text)
                 // styleをunderLineに。valueをrawValueに。該当箇所を0-text.count文字目まで
@@ -514,6 +670,21 @@ class TableViewControllerBS: UITableViewController, UIPrintInteractionController
                   range: NSMakeRange(0, text.count)
                 )
                 cell.label_totalOfMiddleCategory.attributedText = attributeText
+                var textt:String = ""
+                if dataBaseManagerPeriod.checkSettingsPeriod() { // 前年度の会計帳簿の存在有無を確認
+                    textt = dataBaseManagerBS.getTotalRank1(big5: indexPath.section, rank1: 10, lastYear: true) // 中区分の合計を取得
+                }else {
+                    textt = "-"
+                }
+                // テキストをカスタマイズするために、NSMutableAttributedStringにする
+                let attributeTextt = NSMutableAttributedString(string: textt)
+                // styleをunderLineに。valueをrawValueに。該当箇所を0-text.count文字目まで
+                attributeTextt.addAttribute(
+                  NSAttributedString.Key.underlineStyle,
+                  value: NSUnderlineStyle.single.rawValue,
+                  range: NSMakeRange(0, textt.count)
+                )
+                cell.label_totalOfMiddleCategory_previous.attributedText = attributeTextt
                 return cell
             case objects14.count + 2: // 中分類名の分を1行追加 合計の行を追加
                 let cell = tableView.dequeueReusableCell(withIdentifier: "middleCategory", for: indexPath)
@@ -528,7 +699,7 @@ class TableViewControllerBS: UITableViewController, UIPrintInteractionController
                 cell.textLabel?.adjustsFontSizeToFitWidth = true
                 cell.textLabel?.text = "    その他の包括利益累計額合計"
                 print("BS", indexPath.row, "    その他の包括利益累計額合計"+"★")
-                let text:String = dataBaseManagerBS.getTotalRank1(big5: indexPath.section, rank1: 11) // 中区分の合計を取得
+                let text:String = dataBaseManagerBS.getTotalRank1(big5: indexPath.section, rank1: 11, lastYear: false) // 中区分の合計を取得
                 // テキストをカスタマイズするために、NSMutableAttributedStringにする
                 let attributeText = NSMutableAttributedString(string: text)
                 // styleをunderLineに。valueをrawValueに。該当箇所を0-text.count文字目まで
@@ -538,6 +709,21 @@ class TableViewControllerBS: UITableViewController, UIPrintInteractionController
                   range: NSMakeRange(0, text.count)
                 )
                 cell.label_totalOfMiddleCategory.attributedText = attributeText
+                var textt:String = ""
+                if dataBaseManagerPeriod.checkSettingsPeriod() { // 前年度の会計帳簿の存在有無を確認
+                    textt = dataBaseManagerBS.getTotalRank1(big5: indexPath.section, rank1: 11, lastYear: true) // 中区分の合計を取得
+                }else {
+                    textt = "-"
+                }
+                // テキストをカスタマイズするために、NSMutableAttributedStringにする
+                let attributeTextt = NSMutableAttributedString(string: textt)
+                // styleをunderLineに。valueをrawValueに。該当箇所を0-text.count文字目まで
+                attributeTextt.addAttribute(
+                  NSAttributedString.Key.underlineStyle,
+                  value: NSUnderlineStyle.single.rawValue,
+                  range: NSMakeRange(0, textt.count)
+                )
+                cell.label_totalOfMiddleCategory_previous.attributedText = attributeTextt
                 return cell
             case objects14.count + 2 + objects15.count + 1 + 1: //新株予約権16
                 let cell = tableView.dequeueReusableCell(withIdentifier: "totalOfMiddleCategory", for: indexPath) as! TableViewCellTotalOfMiddleCategory
@@ -557,7 +743,7 @@ class TableViewControllerBS: UITableViewController, UIPrintInteractionController
                         cell.textLabel?.text = "純資産合計"
                         print("BS", indexPath.row, "純資産合計"+"★")
                         cell.textLabel?.font = UIFont.boldSystemFont(ofSize: 15)
-                        let text:String = dataBaseManagerBS.getTotalBig5(big5: 2)
+                        let text:String = dataBaseManagerBS.getTotalBig5(big5: 2, lastYear: false)
                         // テキストをカスタマイズするために、NSMutableAttributedStringにする
                         let attributeText = NSMutableAttributedString(string: text)
                         // styleをunderLineに。valueをrawValueに。該当箇所を0-text.count文字目まで
@@ -567,7 +753,23 @@ class TableViewControllerBS: UITableViewController, UIPrintInteractionController
                           range: NSMakeRange(0, text.count)
                         )
                         cell.label_totalOfBigCategory.attributedText = attributeText
-                        cell.label_totalOfBigCategory.font = UIFont.boldSystemFont(ofSize: 15)
+                        cell.label_totalOfBigCategory.font = UIFont.boldSystemFont(ofSize: 14)
+                        var textt:String = ""
+                        if dataBaseManagerPeriod.checkSettingsPeriod() { // 前年度の会計帳簿の存在有無を確認
+                            textt = dataBaseManagerBS.getTotalBig5(big5: 2, lastYear: true)
+                        }else {
+                            textt = "-"
+                        }
+                        // テキストをカスタマイズするために、NSMutableAttributedStringにする
+                        let attributeTextt = NSMutableAttributedString(string: textt)
+                        // styleをunderLineに。valueをrawValueに。該当箇所を0-text.count文字目まで
+                        attributeTextt.addAttribute(
+                          NSAttributedString.Key.underlineStyle,
+                          value: NSUnderlineStyle.single.rawValue,
+                          range: NSMakeRange(0, textt.count)
+                        )
+                        cell.label_totalOfBigCategory_previous.attributedText = attributeTextt
+                        cell.label_totalOfBigCategory_previous.font = UIFont.boldSystemFont(ofSize: 14)
                         // ダークモード対応
                         if (UITraitCollection.current.userInterfaceStyle == .dark) {
                             /* ダークモード時の処理 */
@@ -583,7 +785,7 @@ class TableViewControllerBS: UITableViewController, UIPrintInteractionController
                     
                     cell.textLabel?.text = "  "+objects22[indexPath.row-(objects14.count + 2 + objects15.count + 1 + 1 + objects16.count)].category
                     print("BS", indexPath.row, "  "+objects22[indexPath.row-(objects14.count + 2 + objects15.count + 1 + 1 + objects16.count)].category)
-                    let text:String = dataBaseManagerTaxonomy.getTotalOfTaxonomy(numberOfSettingsTaxonomy: objects22[indexPath.row-(objects14.count + 2 + objects15.count + 1 + 1 + objects16.count)].number)
+                    let text:String = dataBaseManagerTaxonomy.getTotalOfTaxonomy(numberOfSettingsTaxonomy: objects22[indexPath.row-(objects14.count + 2 + objects15.count + 1 + 1 + objects16.count)].number, lastYear: false)
                     // テキストをカスタマイズするために、NSMutableAttributedStringにする
                     let attributeText = NSMutableAttributedString(string: text)
                     // styleをunderLineに。valueをrawValueに。該当箇所を0-text.count文字目まで
@@ -593,11 +795,26 @@ class TableViewControllerBS: UITableViewController, UIPrintInteractionController
                       range: NSMakeRange(0, text.count)
                     )
                     cell.label_totalOfMiddleCategory.attributedText = attributeText
+                    var textt:String = ""
+                    if dataBaseManagerPeriod.checkSettingsPeriod() { // 前年度の会計帳簿の存在有無を確認
+                        textt = dataBaseManagerTaxonomy.getTotalOfTaxonomy(numberOfSettingsTaxonomy: objects22[indexPath.row-(objects14.count + 2 + objects15.count + 1 + 1 + objects16.count)].number, lastYear: true)
+                    }else {
+                        textt = "-"
+                    }
+                    // テキストをカスタマイズするために、NSMutableAttributedStringにする
+                    let attributeTextt = NSMutableAttributedString(string: textt)
+                    // styleをunderLineに。valueをrawValueに。該当箇所を0-text.count文字目まで
+                    attributeTextt.addAttribute(
+                      NSAttributedString.Key.underlineStyle,
+                      value: NSUnderlineStyle.single.rawValue,
+                      range: NSMakeRange(0, textt.count)
+                    )
+                    cell.label_totalOfMiddleCategory_previous.attributedText = attributeTextt
                     return cell
                 }
                 cell.textLabel?.text = "  "+objects16[indexPath.row-(objects14.count + 2 + objects15.count + 1 + 1)].category
                 print("BS", indexPath.row, "  "+objects16[indexPath.row-(objects14.count + 2 + objects15.count + 1 + 1)].category)
-                let text:String = dataBaseManagerTaxonomy.getTotalOfTaxonomy(numberOfSettingsTaxonomy: objects16[indexPath.row-(objects14.count + 2 + objects15.count + 1 + 1)].number)
+                let text:String = dataBaseManagerTaxonomy.getTotalOfTaxonomy(numberOfSettingsTaxonomy: objects16[indexPath.row-(objects14.count + 2 + objects15.count + 1 + 1)].number, lastYear: false)
                 // テキストをカスタマイズするために、NSMutableAttributedStringにする
                 let attributeText = NSMutableAttributedString(string: text)
                 // styleをunderLineに。valueをrawValueに。該当箇所を0-text.count文字目まで
@@ -607,6 +824,21 @@ class TableViewControllerBS: UITableViewController, UIPrintInteractionController
                     range: NSMakeRange(0, text.count)
                 )
                 cell.label_totalOfMiddleCategory.attributedText = attributeText
+                var textt:String = ""
+                if dataBaseManagerPeriod.checkSettingsPeriod() { // 前年度の会計帳簿の存在有無を確認
+                    textt = dataBaseManagerTaxonomy.getTotalOfTaxonomy(numberOfSettingsTaxonomy: objects16[indexPath.row-(objects14.count + 2 + objects15.count + 1 + 1)].number, lastYear: true)
+                }else {
+                    textt = "-"
+                }
+                // テキストをカスタマイズするために、NSMutableAttributedStringにする
+                let attributeTextt = NSMutableAttributedString(string: textt)
+                // styleをunderLineに。valueをrawValueに。該当箇所を0-text.count文字目まで
+                attributeTextt.addAttribute(
+                    NSAttributedString.Key.underlineStyle,
+                    value: NSUnderlineStyle.single.rawValue,
+                    range: NSMakeRange(0, textt.count)
+                )
+                cell.label_totalOfMiddleCategory_previous.attributedText = attributeTextt
                 return cell
             case objects14.count + 2 + objects15.count + 1 + 1 + objects16.count: //非支配株主持分22
                 let cell = tableView.dequeueReusableCell(withIdentifier: "totalOfMiddleCategory", for: indexPath) as! TableViewCellTotalOfMiddleCategory
@@ -619,7 +851,7 @@ class TableViewControllerBS: UITableViewController, UIPrintInteractionController
                     cell.textLabel?.text = "純資産合計"
                     print("BS", indexPath.row, "純資産合計"+"★")
                     cell.textLabel?.font = UIFont.boldSystemFont(ofSize: 15)
-                    let text:String = dataBaseManagerBS.getTotalBig5(big5: 2)
+                    let text:String = dataBaseManagerBS.getTotalBig5(big5: 2, lastYear: false)
                     // テキストをカスタマイズするために、NSMutableAttributedStringにする
                     let attributeText = NSMutableAttributedString(string: text)
                     // styleをunderLineに。valueをrawValueに。該当箇所を0-text.count文字目まで
@@ -629,7 +861,23 @@ class TableViewControllerBS: UITableViewController, UIPrintInteractionController
                       range: NSMakeRange(0, text.count)
                     )
                     cell.label_totalOfBigCategory.attributedText = attributeText
-                    cell.label_totalOfBigCategory.font = UIFont.boldSystemFont(ofSize: 15)
+                    cell.label_totalOfBigCategory.font = UIFont.boldSystemFont(ofSize: 14)
+                    var textt:String = ""
+                    if dataBaseManagerPeriod.checkSettingsPeriod() { // 前年度の会計帳簿の存在有無を確認
+                        textt = dataBaseManagerBS.getTotalBig5(big5: 2, lastYear: true)
+                    }else {
+                        textt = "-"
+                    }
+                    // テキストをカスタマイズするために、NSMutableAttributedStringにする
+                    let attributeTextt = NSMutableAttributedString(string: textt)
+                    // styleをunderLineに。valueをrawValueに。該当箇所を0-text.count文字目まで
+                    attributeTextt.addAttribute(
+                      NSAttributedString.Key.underlineStyle,
+                      value: NSUnderlineStyle.single.rawValue,
+                      range: NSMakeRange(0, textt.count)
+                    )
+                    cell.label_totalOfBigCategory_previous.attributedText = attributeTextt
+                    cell.label_totalOfBigCategory_previous.font = UIFont.boldSystemFont(ofSize: 14)
                     // ダークモード対応
                     if (UITraitCollection.current.userInterfaceStyle == .dark) {
                         /* ダークモード時の処理 */
@@ -643,7 +891,7 @@ class TableViewControllerBS: UITableViewController, UIPrintInteractionController
                 } // 1. array.count（要素数）を利用する
                 cell.textLabel?.text = "  "+objects22[indexPath.row-(objects14.count + 2 + objects15.count + 1 + 1 + objects16.count)].category
                 print("BS", indexPath.row, "  "+objects22[indexPath.row-(objects14.count + 2 + objects15.count + 1 + 1 + objects16.count)].category)
-                let text:String = dataBaseManagerTaxonomy.getTotalOfTaxonomy(numberOfSettingsTaxonomy: objects22[indexPath.row-(objects14.count + 2 + objects15.count + 1 + 1 + objects16.count)].number)
+                let text:String = dataBaseManagerTaxonomy.getTotalOfTaxonomy(numberOfSettingsTaxonomy: objects22[indexPath.row-(objects14.count + 2 + objects15.count + 1 + 1 + objects16.count)].number, lastYear: false)
                 // テキストをカスタマイズするために、NSMutableAttributedStringにする
                 let attributeText = NSMutableAttributedString(string: text)
                 // styleをunderLineに。valueをrawValueに。該当箇所を0-text.count文字目まで
@@ -653,13 +901,28 @@ class TableViewControllerBS: UITableViewController, UIPrintInteractionController
                   range: NSMakeRange(0, text.count)
                 )
                 cell.label_totalOfMiddleCategory.attributedText = attributeText
+                var textt:String = ""
+                if dataBaseManagerPeriod.checkSettingsPeriod() { // 前年度の会計帳簿の存在有無を確認
+                    textt = dataBaseManagerTaxonomy.getTotalOfTaxonomy(numberOfSettingsTaxonomy: objects22[indexPath.row-(objects14.count + 2 + objects15.count + 1 + 1 + objects16.count)].number, lastYear: true)
+                }else {
+                    textt = "-"
+                }
+                // テキストをカスタマイズするために、NSMutableAttributedStringにする
+                let attributeTextt = NSMutableAttributedString(string: textt)
+                // styleをunderLineに。valueをrawValueに。該当箇所を0-text.count文字目まで
+                attributeTextt.addAttribute(
+                  NSAttributedString.Key.underlineStyle,
+                  value: NSUnderlineStyle.single.rawValue,
+                  range: NSMakeRange(0, textt.count)
+                )
+                cell.label_totalOfMiddleCategory_previous.attributedText = attributeTextt
                 return cell
             case objects14.count + 2 + objects15.count + 1 + 1 + objects16.count + objects22.count: //最後の行
                 let cell = tableView.dequeueReusableCell(withIdentifier: "totalOfBigCategory", for: indexPath) as! TableViewCellTotalOfBigCategory
                 cell.textLabel?.text = "純資産合計"
                 print("BS", indexPath.row, "純資産合計"+"★")
                 cell.textLabel?.font = UIFont.boldSystemFont(ofSize: 15)
-                let text:String = dataBaseManagerBS.getTotalBig5(big5: 2)
+                let text:String = dataBaseManagerBS.getTotalBig5(big5: 2, lastYear: false)
                 // テキストをカスタマイズするために、NSMutableAttributedStringにする
                 let attributeText = NSMutableAttributedString(string: text)
                 // styleをunderLineに。valueをrawValueに。該当箇所を0-text.count文字目まで
@@ -669,7 +932,23 @@ class TableViewControllerBS: UITableViewController, UIPrintInteractionController
                   range: NSMakeRange(0, text.count)
                 )
                 cell.label_totalOfBigCategory.attributedText = attributeText
-                cell.label_totalOfBigCategory.font = UIFont.boldSystemFont(ofSize: 15)
+                cell.label_totalOfBigCategory.font = UIFont.boldSystemFont(ofSize: 14)
+                var textt:String = ""
+                if dataBaseManagerPeriod.checkSettingsPeriod() { // 前年度の会計帳簿の存在有無を確認
+                    textt = dataBaseManagerBS.getTotalBig5(big5: 2, lastYear: true)
+                }else {
+                    textt = "-"
+                }
+                // テキストをカスタマイズするために、NSMutableAttributedStringにする
+                let attributeTextt = NSMutableAttributedString(string: textt)
+                // styleをunderLineに。valueをrawValueに。該当箇所を0-text.count文字目まで
+                attributeTextt.addAttribute(
+                  NSAttributedString.Key.underlineStyle,
+                  value: NSUnderlineStyle.single.rawValue,
+                  range: NSMakeRange(0, textt.count)
+                )
+                cell.label_totalOfBigCategory_previous.attributedText = attributeTextt
+                cell.label_totalOfBigCategory_previous.font = UIFont.boldSystemFont(ofSize: 14)
                 // ダークモード対応
                 if (UITraitCollection.current.userInterfaceStyle == .dark) {
                     /* ダークモード時の処理 */
@@ -687,7 +966,7 @@ class TableViewControllerBS: UITableViewController, UIPrintInteractionController
                 cell.textLabel?.font = UIFont.boldSystemFont(ofSize: 15)
 //                print(dataBaseManagerBS.getBigCategoryTotal(big_category: 1) )
 //                print(dataBaseManagerBS.getBigCategoryTotal(big_category: 2) )
-                let text:String = dataBaseManagerBS.getTotalBig5(big5: 3)
+                let text:String = dataBaseManagerBS.getTotalBig5(big5: 3, lastYear: false)
                 // テキストをカスタマイズするために、NSMutableAttributedStringにする
                 let attributeText = NSMutableAttributedString(string: text)
                 // styleをunderLineに。valueをrawValueに。該当箇所を0-text.count文字目まで
@@ -697,9 +976,25 @@ class TableViewControllerBS: UITableViewController, UIPrintInteractionController
                     range: NSMakeRange(0, text.count)
                 )
                 cell.label_totalOfBigCategory.attributedText = attributeText
-                cell.label_totalOfBigCategory.font = UIFont.boldSystemFont(ofSize: 15)
+                cell.label_totalOfBigCategory.font = UIFont.boldSystemFont(ofSize: 14)
+                var textt:String = ""
+                if dataBaseManagerPeriod.checkSettingsPeriod() { // 前年度の会計帳簿の存在有無を確認
+                    textt = dataBaseManagerBS.getTotalBig5(big5: 3, lastYear: true)
+                }else {
+                    textt = "-"
+                }
+                // テキストをカスタマイズするために、NSMutableAttributedStringにする
+                let attributeTextt = NSMutableAttributedString(string: textt)
+                // styleをunderLineに。valueをrawValueに。該当箇所を0-text.count文字目まで
+                attributeTextt.addAttribute(
+                    NSAttributedString.Key.underlineStyle,
+                    value: NSUnderlineStyle.single.rawValue,
+                    range: NSMakeRange(0, textt.count)
+                )
+                cell.label_totalOfBigCategory_previous.attributedText = attributeTextt
+                cell.label_totalOfBigCategory_previous.font = UIFont.boldSystemFont(ofSize: 14)
                 // 資産合計と純資産負債合計の金額が不一致の場合、文字色を赤
-                if dataBaseManagerBS.getTotalBig5(big5: 0) != dataBaseManagerBS.getTotalBig5(big5: 3) {
+                if dataBaseManagerBS.getTotalBig5(big5: 0, lastYear: false) != dataBaseManagerBS.getTotalBig5(big5: 3, lastYear: false) {
                     cell.label_totalOfBigCategory.textColor = .red
                 }else {
                     // ダークモード対応
@@ -722,13 +1017,23 @@ class TableViewControllerBS: UITableViewController, UIPrintInteractionController
                          indexPath.row <  objects14.count + 1 {      // 株主資本合計
                     cell.textLabel?.text = "        "+objects14[indexPath.row-1].category
                     print("BS", indexPath.row, "        "+objects14[indexPath.row-1].category)
-                    cell.label_account.text = dataBaseManagerTaxonomy.getTotalOfTaxonomy(numberOfSettingsTaxonomy: objects14[indexPath.row-1].number)
+                    cell.label_account.text = dataBaseManagerTaxonomy.getTotalOfTaxonomy(numberOfSettingsTaxonomy: objects14[indexPath.row-1].number, lastYear: false)
+                    if dataBaseManagerPeriod.checkSettingsPeriod() { // 前年度の会計帳簿の存在有無を確認
+                        cell.label_account_previous.text = dataBaseManagerTaxonomy.getTotalOfTaxonomy(numberOfSettingsTaxonomy: objects14[indexPath.row-1].number, lastYear: true)
+                    }else {
+                        cell.label_account_previous.text = "-"
+                    }
                     cell.label_account.textAlignment = .right
                 }else if indexPath.row >= objects14.count + 2 + 1 &&                     //その他の包括利益累計額
                           indexPath.row <   objects14.count + 2 + objects15.count + 1 {    //その他の包括利益累計額合計
                     cell.textLabel?.text = "        "+objects15[indexPath.row-(objects14.count + 2 + 1)].category
                     print("BS", indexPath.row, "        "+objects15[indexPath.row-(objects14.count + 2 + 1)].category)
-                    cell.label_account.text = dataBaseManagerTaxonomy.getTotalOfTaxonomy(numberOfSettingsTaxonomy: objects15[indexPath.row-(objects14.count + 2 + 1)].number)
+                    cell.label_account.text = dataBaseManagerTaxonomy.getTotalOfTaxonomy(numberOfSettingsTaxonomy: objects15[indexPath.row-(objects14.count + 2 + 1)].number, lastYear: false)
+                    if dataBaseManagerPeriod.checkSettingsPeriod() { // 前年度の会計帳簿の存在有無を確認
+                        cell.label_account_previous.text = dataBaseManagerTaxonomy.getTotalOfTaxonomy(numberOfSettingsTaxonomy: objects15[indexPath.row-(objects14.count + 2 + 1)].number, lastYear: true)
+                    }else {
+                        cell.label_account_previous.text = "-"
+                    }
                     cell.label_account.textAlignment = .right
                 }else {
                     print("??")
@@ -808,8 +1113,10 @@ class TableViewControllerBS: UITableViewController, UIPrintInteractionController
             }
         }else{
             if self.navigationController?.navigationBar.bounds.height != nil {
+//                // インセットを設定する　ステータスバーとナビゲーションバーより下からテーブルビューを配置するため
+//                scrollView.contentInset = UIEdgeInsets(top: +self.navigationController!.navigationBar.bounds.height+UIApplication.shared.statusBarFrame.height, left: 0, bottom: 0, right: 0)
                 // インセットを設定する　ステータスバーとナビゲーションバーより下からテーブルビューを配置するため
-                scrollView.contentInset = UIEdgeInsets(top: +self.navigationController!.navigationBar.bounds.height+UIApplication.shared.statusBarFrame.height, left: 0, bottom: 0, right: 0)
+                scrollView.contentInset = UIEdgeInsets(top: +(UIApplication.shared.statusBarFrame.height+self.navigationController!.navigationBar.bounds.height), left: 0, bottom: (self.tabBarController?.tabBar.frame.size.height)!, right: 0)
             }
         }
     }

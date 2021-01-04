@@ -18,7 +18,7 @@ class TableViewControllerFinancialStatement: UITableViewController {
     // テスト用広告ユニットID
     let TEST_ID = "ca-app-pub-3940256099942544/2934735716"
     // true:テスト
-    let AdMobTest:Bool = false
+    let AdMobTest:Bool = true
     @IBOutlet var gADBannerView: GADBannerView!
     
     @IBOutlet var TableViewFS: UITableView!

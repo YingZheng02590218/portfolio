@@ -7,10 +7,10 @@
 ### **https://apps.apple.com/us/app/id1535793378#?platform=iphone**  
  
 ## 主な機能
-取引の情報を入力すると財務諸表を作成できる  
+取引の情報を入力すると財務諸表と各帳簿を作成できる  
 仕訳帳、総勘定元帳、試算表、精算表の作成と印刷  
 貸借対照表、損益計算書の作成と印刷  
-勘定科目の追加、削除、編集  
+勘定科目の追加、編集 、削除 
 初回起動時にチュートリアルページを表示
   
 ## 使用方法
@@ -44,7 +44,8 @@
   
   
 ## 使用した技術
-- 開発環境 : Xcode, Swift
+- 開発環境 : Xcode
+- 言語 : Swift
 - DataBase : Realm
 - チュートリアル画面 : [Gecco](https://github.com/bannzai/Gecco)
 - 画面デザイン : [EMTNeumorphicView](https://github.com/hirokimu/EMTNeumorphicView)

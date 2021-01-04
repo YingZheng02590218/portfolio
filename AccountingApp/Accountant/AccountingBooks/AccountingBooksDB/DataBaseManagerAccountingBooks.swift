@@ -96,7 +96,7 @@ class DataBaseManagerAccountingBooks: DataBaseManager {
             realm.delete(object)
         }
         // 開く会計帳簿を最新の帳簿にする
-        let databaseManager = DataBaseManagerPeriod()
+        let databaseManager = DataBaseManagerSettingsPeriod()
         for i in 0..<objects.count {
             databaseManager.setMainBooksOpenOrClose(tag: objects[i].number)
         }

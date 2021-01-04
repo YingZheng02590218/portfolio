@@ -18,23 +18,18 @@ class TableViewControllerPL: UITableViewController, UIPrintInteractionController
     // テスト用広告ユニットID
     let TEST_ID = "ca-app-pub-3940256099942544/2934735716"
     // true:テスト
-    let AdMobTest:Bool = false
+    let AdMobTest:Bool = true
     @IBOutlet var gADBannerView: GADBannerView!
     
     @IBOutlet weak var label_company_name: UILabel!
     @IBOutlet weak var label_title: UILabel!
     @IBOutlet weak var label_closingDate: UILabel!
+    @IBOutlet var label_closingDate_previous: UILabel!
+    @IBOutlet var label_closingDate_thisYear: UILabel!
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // 月末、年度末などの決算日をラベルに表示する
-        let dataBaseManagerAccountingBooksShelf = DataBaseManagerAccountingBooksShelf() 
-        let company = dataBaseManagerAccountingBooksShelf.getCompanyName()
-        label_company_name.text = company // 社名
-        let dataBaseManagerPeriod = DataBaseManagerPeriod() //データベースマネジャー
-        let fiscalYear = dataBaseManagerPeriod.getSettingsPeriodYear()
-        label_closingDate.text = String(fiscalYear+1) + "年3月31日" // 決算日を表示する
-        label_title.text = "損益計算書"
         
         let refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: Selector(("refreshTable")), for: UIControl.Event.valueChanged)
@@ -42,6 +37,24 @@ class TableViewControllerPL: UITableViewController, UIPrintInteractionController
     }
     // ビューが表示される直前に呼ばれる
     override func viewWillAppear(_ animated: Bool){
+        // 月末、年度末などの決算日をラベルに表示する
+        let dataBaseManagerAccountingBooksShelf = DataBaseManagerAccountingBooksShelf()
+        let company = dataBaseManagerAccountingBooksShelf.getCompanyName()
+        label_company_name.text = company // 社名
+        let dataBaseManagerPeriod = DataBaseManagerSettingsPeriod() //データベースマネジャー
+        let fiscalYear = dataBaseManagerPeriod.getSettingsPeriodYear()
+        let dataBaseManager = DataBaseManagerSettingsPeriod()
+        let object = dataBaseManager.getTheDayOfReckoning()
+        if object == "12/31" { // 会計期間が年をまたがない場合
+            label_closingDate.text = String(fiscalYear) + "年\(object.prefix(2))月\(object.suffix(2))日" // 決算日を表示する
+            label_closingDate_previous.text = "前年度\n(" + String(fiscalYear-1) + "年\(object.prefix(2))月\(object.suffix(2))日)" // 前年度　決算日を表示する
+            label_closingDate_thisYear.text = "今年度\n(" + String(fiscalYear) + "年\(object.prefix(2))月\(object.suffix(2))日)" // 今年度　決算日を表示する
+        }else {
+            label_closingDate.text = String(fiscalYear+1) + "年\(object.prefix(2))月\(object.suffix(2))日" // 決算日を表示する
+            label_closingDate_previous.text = "前年度\n(" + String(fiscalYear) + "年\(object.prefix(2))月\(object.suffix(2))日)" // 前年度　決算日を表示する
+            label_closingDate_thisYear.text = "今年度\n(" + String(fiscalYear+1) + "年\(object.prefix(2))月\(object.suffix(2))日)" // 今年度　決算日を表示する
+        }
+        label_title.text = "損益計算書"
         // 損益計算書　初期化　再計算
         dataBaseManagerPL.initializeBenefits()
         // 仕訳帳画面を表示する際に、インセットを設定する。top: ステータスバーとナビゲーションバーの高さより下からテーブルを描画するため
@@ -95,16 +108,16 @@ class TableViewControllerPL: UITableViewController, UIPrintInteractionController
     
     @objc func refreshTable() {
         // 全勘定の合計と残高を計算する
-        let databaseManager = DataBaseManagerTB()
-        databaseManager.setAllAccountTotal()
-        databaseManager.calculateAmountOfAllAccount() // 合計額を計算
+//        let databaseManager = DataBaseManagerTB()
+//        databaseManager.setAllAccountTotal()
+//        databaseManager.calculateAmountOfAllAccount() // 合計額を計算
         // 損益計算書　初期化　再計算
         dataBaseManagerPL.initializeBenefits()
         //精算表　借方合計と貸方合計の計算 (修正記入、損益計算書、貸借対照表)
-        let databaseManagerWS = DataBaseManagerWS()
-        databaseManagerWS.calculateAmountOfAllAccount()
-        databaseManagerWS.calculateAmountOfAllAccountForBS()
-        databaseManagerWS.calculateAmountOfAllAccountForPL()
+//        let databaseManagerWS = DataBaseManagerWS()
+//        databaseManagerWS.calculateAmountOfAllAccount()
+//        databaseManagerWS.calculateAmountOfAllAccountForBS()
+//        databaseManagerWS.calculateAmountOfAllAccountForPL()
         // 更新処理
         self.tableView.reloadData()
         // クルクルを止める
@@ -157,30 +170,51 @@ class TableViewControllerPL: UITableViewController, UIPrintInteractionController
         let htouki =        3 + objects9.count + mid_category10.count + mid_category6.count + mid_category11.count + mid_category7.count + 15 //非支配株主に帰属する当期純利益
         let otouki =        3 + objects9.count + mid_category10.count + mid_category6.count + mid_category11.count + mid_category7.count + 16 //親会社株主に帰属する当期純利益
 
+        // 開いている会計帳簿の年度を取得
+        let dataBaseManagerPeriod = DataBaseManagerSettingsPeriod()
+
         switch indexPath.row {
         case 0: //売上高10
             let cell = tableView.dequeueReusableCell(withIdentifier: "plus", for: indexPath) as! TableViewCellAmount
             cell.textLabel?.text = "売上高"
             cell.textLabel?.font = UIFont.systemFont(ofSize: 15)
             //ラベルを置いて金額を表示する 
-            cell.label_amount.text = dataBaseManagerPL.getTotalRank0(big5: 4, rank0: 6)
-            cell.label_amount.font = UIFont.systemFont(ofSize: 15)
+            cell.label_amount.text = dataBaseManagerPL.getTotalRank0(big5: 4, rank0: 6, lastYear: false)
+            cell.label_amount.font = UIFont.systemFont(ofSize: 13)
+            if dataBaseManagerPeriod.checkSettingsPeriod() { // 前年度の会計帳簿の存在有無を確認
+                cell.label_amount_previous.text = dataBaseManagerPL.getTotalRank0(big5: 4, rank0: 6, lastYear: true)
+            }else {
+                cell.label_amount_previous.text = "-"
+            }
+            cell.label_amount_previous.font = UIFont.systemFont(ofSize: 13)
             return cell
         case 1: //売上原価8
             let cell = tableView.dequeueReusableCell(withIdentifier: "minus", for: indexPath) as! TableViewCellAmount
             cell.textLabel?.text = "売上原価"
             cell.textLabel?.font = UIFont.systemFont(ofSize: 15)
             //ラベルを置いて金額を表示する
-            cell.label_amount.text = dataBaseManagerPL.getTotalRank0(big5: 3, rank0: 7)
-            cell.label_amount.font = UIFont.systemFont(ofSize: 15)
+            cell.label_amount.text = dataBaseManagerPL.getTotalRank0(big5: 3, rank0: 7, lastYear: false)
+            cell.label_amount.font = UIFont.systemFont(ofSize: 13)
+            if dataBaseManagerPeriod.checkSettingsPeriod() { // 前年度の会計帳簿の存在有無を確認
+                cell.label_amount_previous.text = dataBaseManagerPL.getTotalRank0(big5: 3, rank0: 7, lastYear: true)
+            }else {
+                cell.label_amount_previous.text = "-"
+            }
+            cell.label_amount_previous.font = UIFont.systemFont(ofSize: 13)
             return cell
         case 2: //売上総利益
             let cell = tableView.dequeueReusableCell(withIdentifier: "equal", for: indexPath) as! TableViewCellAmount
             cell.textLabel?.text = "売上総利益"
             cell.textLabel?.font = UIFont.boldSystemFont(ofSize: 15)
             //ラベルを置いて金額を表示する
-            cell.label_amount.text = dataBaseManagerPL.getBenefitTotal(benefit: 0)
-            cell.label_amount.font = UIFont.boldSystemFont(ofSize: 15)
+            cell.label_amount.text = dataBaseManagerPL.getBenefitTotal(benefit: 0, lastYear: false)
+            cell.label_amount.font = UIFont.boldSystemFont(ofSize: 14)
+            if dataBaseManagerPeriod.checkSettingsPeriod() { // 前年度の会計帳簿の存在有無を確認
+                cell.label_amount_previous.text = dataBaseManagerPL.getBenefitTotal(benefit: 0, lastYear: true)
+            }else {
+                cell.label_amount_previous.text = "-"
+            }
+            cell.label_amount_previous.font = UIFont.boldSystemFont(ofSize: 14)
             return cell
         case 3: //販売費及び一般管理費9
             let cell = tableView.dequeueReusableCell(withIdentifier: "minus", for: indexPath) as! TableViewCellAmount
@@ -188,22 +222,35 @@ class TableViewControllerPL: UITableViewController, UIPrintInteractionController
             cell.textLabel?.font = UIFont.systemFont(ofSize: 15)
             // 金額は表示しない
             cell.label_amount.text = ""
+            cell.label_amount_previous.text = ""
             return cell
         case han: //販売費及び一般管理費合計
             let cell = tableView.dequeueReusableCell(withIdentifier: "minus", for: indexPath) as! TableViewCellAmount
             cell.textLabel?.text = "販売費及び一般管理費合計"
             cell.textLabel?.font = UIFont.systemFont(ofSize: 15)
             //ラベルを置いて金額を表示する
-            cell.label_amount.text = dataBaseManagerPL.getTotalRank0(big5: 3, rank0: 8)
-            cell.label_amount.font = UIFont.systemFont(ofSize: 15)
+            cell.label_amount.text = dataBaseManagerPL.getTotalRank0(big5: 3, rank0: 8, lastYear: false)
+            cell.label_amount.font = UIFont.systemFont(ofSize: 13)
+            if dataBaseManagerPeriod.checkSettingsPeriod() { // 前年度の会計帳簿の存在有無を確認
+                cell.label_amount_previous.text = dataBaseManagerPL.getTotalRank0(big5: 3, rank0: 8, lastYear: true)
+            }else {
+                cell.label_amount_previous.text = "-"
+            }
+            cell.label_amount_previous.font = UIFont.systemFont(ofSize: 13)
             return cell
         case ei: //営業利益
             let cell = tableView.dequeueReusableCell(withIdentifier: "equal", for: indexPath) as! TableViewCellAmount
             cell.textLabel?.text = "営業利益"
             cell.textLabel?.font = UIFont.boldSystemFont(ofSize: 15)
             //ラベルを置いて金額を表示する
-            cell.label_amount.text = dataBaseManagerPL.getBenefitTotal(benefit: 1)
-            cell.label_amount.font = UIFont.boldSystemFont(ofSize: 15)
+            cell.label_amount.text = dataBaseManagerPL.getBenefitTotal(benefit: 1, lastYear: false)
+            cell.label_amount.font = UIFont.boldSystemFont(ofSize: 14)
+            if dataBaseManagerPeriod.checkSettingsPeriod() { // 前年度の会計帳簿の存在有無を確認
+                cell.label_amount_previous.text = dataBaseManagerPL.getBenefitTotal(benefit: 1, lastYear: true)
+            }else {
+                cell.label_amount_previous.text = "-"
+            }
+            cell.label_amount_previous.font = UIFont.boldSystemFont(ofSize: 14)
             return cell
         case eigai: //営業外収益10
             let cell = tableView.dequeueReusableCell(withIdentifier: "plus", for: indexPath) as! TableViewCellAmount
@@ -211,14 +258,21 @@ class TableViewControllerPL: UITableViewController, UIPrintInteractionController
             cell.textLabel?.font = UIFont.systemFont(ofSize: 15)
             // 金額は表示しない
             cell.label_amount.text = ""
+            cell.label_amount_previous.text = ""
             return cell
         case eigaiTotal: //営業外収益合計
             let cell = tableView.dequeueReusableCell(withIdentifier: "plus", for: indexPath) as! TableViewCellAmount
             cell.textLabel?.text = "営業外収益合計"
             cell.textLabel?.font = UIFont.systemFont(ofSize: 15)
             //ラベルを置いて金額を表示する
-            cell.label_amount.text = dataBaseManagerPL.getTotalRank1(big5: 4, rank1: 15)
-            cell.label_amount.font = UIFont.systemFont(ofSize: 15)
+            cell.label_amount.text = dataBaseManagerPL.getTotalRank1(big5: 4, rank1: 15, lastYear: false)
+            cell.label_amount.font = UIFont.systemFont(ofSize: 13)
+            if dataBaseManagerPeriod.checkSettingsPeriod() { // 前年度の会計帳簿の存在有無を確認
+                cell.label_amount_previous.text = dataBaseManagerPL.getTotalRank1(big5: 4, rank1: 15, lastYear: true)
+            }else {
+                cell.label_amount_previous.text = "-"
+            }
+            cell.label_amount_previous.font = UIFont.systemFont(ofSize: 13)
             return cell
         case eigaih: //営業外費用6
             let cell = tableView.dequeueReusableCell(withIdentifier: "minus", for: indexPath) as! TableViewCellAmount
@@ -226,22 +280,35 @@ class TableViewControllerPL: UITableViewController, UIPrintInteractionController
             cell.textLabel?.font = UIFont.systemFont(ofSize: 15)
             // 金額は表示しない
             cell.label_amount.text = ""
+            cell.label_amount_previous.text = ""
             return cell
         case eigaihTotal: //営業外費用合計
             let cell = tableView.dequeueReusableCell(withIdentifier: "minus", for: indexPath) as! TableViewCellAmount
             cell.textLabel?.text = "営業外費用合計"
             cell.textLabel?.font = UIFont.systemFont(ofSize: 15)
             //ラベルを置いて金額を表示する
-            cell.label_amount.text = dataBaseManagerPL.getTotalRank1(big5: 3, rank1: 16)
-            cell.label_amount.font = UIFont.systemFont(ofSize: 15)
+            cell.label_amount.text = dataBaseManagerPL.getTotalRank1(big5: 3, rank1: 16, lastYear: false)
+            cell.label_amount.font = UIFont.systemFont(ofSize: 13)
+            if dataBaseManagerPeriod.checkSettingsPeriod() { // 前年度の会計帳簿の存在有無を確認
+                cell.label_amount_previous.text = dataBaseManagerPL.getTotalRank1(big5: 3, rank1: 16, lastYear: true)
+            }else {
+                cell.label_amount_previous.text = "-"
+            }
+            cell.label_amount_previous.font = UIFont.systemFont(ofSize: 13)
             return cell
         case kei: //経常利益
             let cell = tableView.dequeueReusableCell(withIdentifier: "equal", for: indexPath) as! TableViewCellAmount
             cell.textLabel?.text = "経常利益"
             cell.textLabel?.font = UIFont.boldSystemFont(ofSize: 15)
             //ラベルを置いて金額を表示する
-            cell.label_amount.text = dataBaseManagerPL.getBenefitTotal(benefit: 2)
-            cell.label_amount.font = UIFont.boldSystemFont(ofSize: 15)
+            cell.label_amount.text = dataBaseManagerPL.getBenefitTotal(benefit: 2, lastYear: false)
+            cell.label_amount.font = UIFont.boldSystemFont(ofSize: 14)
+            if dataBaseManagerPeriod.checkSettingsPeriod() { // 前年度の会計帳簿の存在有無を確認
+                cell.label_amount_previous.text = dataBaseManagerPL.getBenefitTotal(benefit: 2, lastYear: true)
+            }else {
+                cell.label_amount_previous.text = "-"
+            }
+            cell.label_amount_previous.font = UIFont.boldSystemFont(ofSize: 14)
             return cell
         case toku: //特別利益11
             let cell = tableView.dequeueReusableCell(withIdentifier: "plus", for: indexPath) as! TableViewCellAmount
@@ -249,14 +316,21 @@ class TableViewControllerPL: UITableViewController, UIPrintInteractionController
             cell.textLabel?.font = UIFont.systemFont(ofSize: 15)
             // 金額は表示しない
             cell.label_amount.text = ""
+            cell.label_amount_previous.text = ""
             return cell
         case tokuTotal: //特別利益合計
             let cell = tableView.dequeueReusableCell(withIdentifier: "plus", for: indexPath) as! TableViewCellAmount
             cell.textLabel?.text = "特別利益合計"
             cell.textLabel?.font = UIFont.systemFont(ofSize: 15)
             //ラベルを置いて金額を表示する
-            cell.label_amount.text = dataBaseManagerPL.getTotalRank1(big5: 4, rank1: 17)
-            cell.label_amount.font = UIFont.systemFont(ofSize: 15)
+            cell.label_amount.text = dataBaseManagerPL.getTotalRank1(big5: 4, rank1: 17, lastYear: false)
+            cell.label_amount.font = UIFont.systemFont(ofSize: 13)
+            if dataBaseManagerPeriod.checkSettingsPeriod() { // 前年度の会計帳簿の存在有無を確認
+                cell.label_amount_previous.text = dataBaseManagerPL.getTotalRank1(big5: 4, rank1: 17, lastYear: true)
+            }else {
+                cell.label_amount_previous.text = "-"
+            }
+            cell.label_amount_previous.font = UIFont.systemFont(ofSize: 13)
             return cell
         case tokus: //特別損失7
             let cell = tableView.dequeueReusableCell(withIdentifier: "minus", for: indexPath) as! TableViewCellAmount
@@ -264,38 +338,63 @@ class TableViewControllerPL: UITableViewController, UIPrintInteractionController
             cell.textLabel?.font = UIFont.systemFont(ofSize: 15)
             // 金額は表示しない
             cell.label_amount.text = ""
+            cell.label_amount_previous.text = ""
             return cell
         case tokusTotal: //特別損失合計
             let cell = tableView.dequeueReusableCell(withIdentifier: "minus", for: indexPath) as! TableViewCellAmount
             cell.textLabel?.text = "特別損失合計"
             cell.textLabel?.font = UIFont.systemFont(ofSize: 15)
             //ラベルを置いて金額を表示する
-            cell.label_amount.text = dataBaseManagerPL.getTotalRank1(big5: 3, rank1: 18)
-            cell.label_amount.font = UIFont.systemFont(ofSize: 15)
+            cell.label_amount.text = dataBaseManagerPL.getTotalRank1(big5: 3, rank1: 18, lastYear: false)
+            cell.label_amount.font = UIFont.systemFont(ofSize: 13)
+            if dataBaseManagerPeriod.checkSettingsPeriod() { // 前年度の会計帳簿の存在有無を確認
+                cell.label_amount_previous.text = dataBaseManagerPL.getTotalRank1(big5: 3, rank1: 18, lastYear: true)
+            }else {
+                cell.label_amount_previous.text = "-"
+            }
+            cell.label_amount_previous.font = UIFont.systemFont(ofSize: 13)
             return cell
         case zei: //税金等調整前当期純利益
             let cell = tableView.dequeueReusableCell(withIdentifier: "equal", for: indexPath) as! TableViewCellAmount
             cell.textLabel?.text = "税金等調整前当期純利益"
             cell.textLabel?.font = UIFont.boldSystemFont(ofSize: 15)
             //ラベルを置いて金額を表示する
-            cell.label_amount.text = dataBaseManagerPL.getBenefitTotal(benefit: 3)
-            cell.label_amount.font = UIFont.boldSystemFont(ofSize: 15)
+            cell.label_amount.text = dataBaseManagerPL.getBenefitTotal(benefit: 3, lastYear: false)
+            cell.label_amount.font = UIFont.boldSystemFont(ofSize: 14)
+            if dataBaseManagerPeriod.checkSettingsPeriod() { // 前年度の会計帳簿の存在有無を確認
+                cell.label_amount_previous.text = dataBaseManagerPL.getBenefitTotal(benefit: 3, lastYear: true)
+            }else {
+                cell.label_amount_previous.text = "-"
+            }
+            cell.label_amount_previous.font = UIFont.boldSystemFont(ofSize: 14)
             return cell
         case zeikin: //税等8
             let cell = tableView.dequeueReusableCell(withIdentifier: "minus", for: indexPath) as! TableViewCellAmount
             cell.textLabel?.text = "法人税等"
             cell.textLabel?.font = UIFont.systemFont(ofSize: 15)
             //ラベルを置いて金額を表示する
-            cell.label_amount.text = dataBaseManagerPL.getTotalRank0(big5: 3, rank0: 11)
-            cell.label_amount.font = UIFont.systemFont(ofSize: 15)
+            cell.label_amount.text = dataBaseManagerPL.getTotalRank0(big5: 3, rank0: 11, lastYear: false)
+            cell.label_amount.font = UIFont.systemFont(ofSize: 13)
+            if dataBaseManagerPeriod.checkSettingsPeriod() { // 前年度の会計帳簿の存在有無を確認
+                cell.label_amount_previous.text = dataBaseManagerPL.getTotalRank0(big5: 3, rank0: 11, lastYear: true)
+            }else {
+                cell.label_amount_previous.text = "-"
+            }
+            cell.label_amount_previous.font = UIFont.systemFont(ofSize: 13)
             return cell
         case touki: //当期純利益
             let cell = tableView.dequeueReusableCell(withIdentifier: "equal", for: indexPath) as! TableViewCellAmount
             cell.textLabel?.text = "当期純利益"
             cell.textLabel?.font = UIFont.boldSystemFont(ofSize: 15)
             //ラベルを置いて金額を表示する
-            cell.label_amount.text = dataBaseManagerPL.getBenefitTotal(benefit: 4)
-            cell.label_amount.font = UIFont.boldSystemFont(ofSize: 15)
+            cell.label_amount.text = dataBaseManagerPL.getBenefitTotal(benefit: 4, lastYear: false)
+            cell.label_amount.font = UIFont.boldSystemFont(ofSize: 14)
+            if dataBaseManagerPeriod.checkSettingsPeriod() { // 前年度の会計帳簿の存在有無を確認
+                cell.label_amount_previous.text = dataBaseManagerPL.getBenefitTotal(benefit: 4, lastYear: true)
+            }else {
+                cell.label_amount_previous.text = "-"
+            }
+            cell.label_amount_previous.font = UIFont.boldSystemFont(ofSize: 14)
             return cell
         case htouki: //非支配株主に帰属する当期純利益
             let cell = tableView.dequeueReusableCell(withIdentifier: "equal", for: indexPath) as! TableViewCellAmount
@@ -303,7 +402,13 @@ class TableViewControllerPL: UITableViewController, UIPrintInteractionController
             cell.textLabel?.font = UIFont.boldSystemFont(ofSize: 15)
             //ラベルを置いて金額を表示する
             cell.label_amount.text = "0"//dataBaseManagerPL.getBenefitTotal(benefit: 4) //todo
-            cell.label_amount.font = UIFont.boldSystemFont(ofSize: 15)
+            cell.label_amount.font = UIFont.boldSystemFont(ofSize: 14)
+            if dataBaseManagerPeriod.checkSettingsPeriod() { // 前年度の会計帳簿の存在有無を確認
+                cell.label_amount_previous.text = "0"//dataBaseManagerPL.getBenefitTotal(benefit: 4) //todo
+            }else {
+                cell.label_amount_previous.text = "-"
+            }
+            cell.label_amount_previous.font = UIFont.boldSystemFont(ofSize: 14)
             return cell
         case otouki: //親会社株主に帰属する当期純利益
             let cell = tableView.dequeueReusableCell(withIdentifier: "equal", for: indexPath) as! TableViewCellAmount
@@ -311,7 +416,13 @@ class TableViewControllerPL: UITableViewController, UIPrintInteractionController
             cell.textLabel?.font = UIFont.boldSystemFont(ofSize: 15)
             //ラベルを置いて金額を表示する
             cell.label_amount.text = "0"//dataBaseManagerPL.getBenefitTotal(benefit: 4) //todo
-            cell.label_amount.font = UIFont.boldSystemFont(ofSize: 15)
+            cell.label_amount.font = UIFont.boldSystemFont(ofSize: 14)
+            if dataBaseManagerPeriod.checkSettingsPeriod() { // 前年度の会計帳簿の存在有無を確認
+                cell.label_amount_previous.text = "0"//dataBaseManagerPL.getBenefitTotal(benefit: 4) //todo
+            }else {
+                cell.label_amount_previous.text = "-"
+            }
+            cell.label_amount_previous.font = UIFont.boldSystemFont(ofSize: 14)
             return cell
         default:
             // 勘定科目
@@ -321,8 +432,14 @@ class TableViewControllerPL: UITableViewController, UIPrintInteractionController
                 cell.textLabel?.text = "    "+objects9[indexPath.row - (3+1)].category
                 cell.textLabel?.font = UIFont.systemFont(ofSize: 15)
                 //ラベルを置いて金額を表示する
-                cell.label_amount.text = dataBaseManagerTaxonomy.getTotalOfTaxonomy(numberOfSettingsTaxonomy: objects9[indexPath.row - (3+1)].number) // BSAndPL_category を number に変更する 2020/09/17
-                cell.label_amount.font = UIFont.systemFont(ofSize: 15)
+                cell.label_amount.text = dataBaseManagerTaxonomy.getTotalOfTaxonomy(numberOfSettingsTaxonomy: objects9[indexPath.row - (3+1)].number, lastYear: false) // BSAndPL_category を number に変更する 2020/09/17
+                cell.label_amount.font = UIFont.systemFont(ofSize: 13)
+                if dataBaseManagerPeriod.checkSettingsPeriod() { // 前年度の会計帳簿の存在有無を確認
+                    cell.label_amount_previous.text = dataBaseManagerTaxonomy.getTotalOfTaxonomy(numberOfSettingsTaxonomy: objects9[indexPath.row - (3+1)].number, lastYear: true)
+                }else {
+                    cell.label_amount_previous.text = "-"
+                }
+                cell.label_amount_previous.font = UIFont.systemFont(ofSize: 13)
                 return cell
             }else if indexPath.row > eigai &&             // 営業外収益10
                       indexPath.row < eigaiTotal {          // 営業外収益合計
@@ -330,8 +447,14 @@ class TableViewControllerPL: UITableViewController, UIPrintInteractionController
                 cell.textLabel?.text = "    "+mid_category10[indexPath.row - (eigai + 1)].category
                 cell.textLabel?.font = UIFont.systemFont(ofSize: 15)
                 //ラベルを置いて金額を表示する
-                cell.label_amount.text = dataBaseManagerTaxonomy.getTotalOfTaxonomy(numberOfSettingsTaxonomy: mid_category10[indexPath.row - (eigai + 1)].number) //収益:4
-                cell.label_amount.font = UIFont.systemFont(ofSize: 15)
+                cell.label_amount.text = dataBaseManagerTaxonomy.getTotalOfTaxonomy(numberOfSettingsTaxonomy: mid_category10[indexPath.row - (eigai + 1)].number, lastYear: false) //収益:4
+                cell.label_amount.font = UIFont.systemFont(ofSize: 13)
+                if dataBaseManagerPeriod.checkSettingsPeriod() { // 前年度の会計帳簿の存在有無を確認
+                    cell.label_amount_previous.text = dataBaseManagerTaxonomy.getTotalOfTaxonomy(numberOfSettingsTaxonomy: mid_category10[indexPath.row - (eigai + 1)].number, lastYear: true) //収益:4
+                }else {
+                    cell.label_amount_previous.text = "-"
+                }
+                cell.label_amount_previous.font = UIFont.systemFont(ofSize: 13)
                 return cell
             }else if indexPath.row > eigaih &&          // 営業外費用
                       indexPath.row < eigaihTotal {      // 営業外費用合計
@@ -339,8 +462,14 @@ class TableViewControllerPL: UITableViewController, UIPrintInteractionController
                 cell.textLabel?.text = "    "+mid_category6[indexPath.row - (eigaih + 1)].category
                 cell.textLabel?.font = UIFont.systemFont(ofSize: 15)
                 //ラベルを置いて金額を表示する
-                cell.label_amount.text = dataBaseManagerTaxonomy.getTotalOfTaxonomy(numberOfSettingsTaxonomy: mid_category6[indexPath.row - (eigaih + 1)].number)
-                cell.label_amount.font = UIFont.systemFont(ofSize: 15)
+                cell.label_amount.text = dataBaseManagerTaxonomy.getTotalOfTaxonomy(numberOfSettingsTaxonomy: mid_category6[indexPath.row - (eigaih + 1)].number, lastYear: false)
+                cell.label_amount.font = UIFont.systemFont(ofSize: 13)
+                if dataBaseManagerPeriod.checkSettingsPeriod() { // 前年度の会計帳簿の存在有無を確認
+                    cell.label_amount_previous.text = dataBaseManagerTaxonomy.getTotalOfTaxonomy(numberOfSettingsTaxonomy: mid_category6[indexPath.row - (eigaih + 1)].number, lastYear: true)
+                }else {
+                    cell.label_amount_previous.text = "-"
+                }
+                cell.label_amount_previous.font = UIFont.systemFont(ofSize: 13)
                 return cell
             }else if indexPath.row > toku &&                       // 特別利益
                       indexPath.row < tokuTotal {                   // 特別利益合計
@@ -348,8 +477,14 @@ class TableViewControllerPL: UITableViewController, UIPrintInteractionController
                 cell.textLabel?.text = "    "+mid_category11[indexPath.row - (toku + 1)].category
                 cell.textLabel?.font = UIFont.systemFont(ofSize: 15)
                 //ラベルを置いて金額を表示する
-                cell.label_amount.text = dataBaseManagerTaxonomy.getTotalOfTaxonomy(numberOfSettingsTaxonomy: mid_category11[indexPath.row - (toku+1)].number) //収益:4
-                cell.label_amount.font = UIFont.systemFont(ofSize: 15)
+                cell.label_amount.text = dataBaseManagerTaxonomy.getTotalOfTaxonomy(numberOfSettingsTaxonomy: mid_category11[indexPath.row - (toku+1)].number, lastYear: false) //収益:4
+                cell.label_amount.font = UIFont.systemFont(ofSize: 13)
+                if dataBaseManagerPeriod.checkSettingsPeriod() { // 前年度の会計帳簿の存在有無を確認
+                    cell.label_amount_previous.text = dataBaseManagerTaxonomy.getTotalOfTaxonomy(numberOfSettingsTaxonomy: mid_category11[indexPath.row - (toku+1)].number, lastYear: true) //収益:4
+                }else {
+                    cell.label_amount_previous.text = "-"
+                }
+                cell.label_amount_previous.font = UIFont.systemFont(ofSize: 13)
                 return cell
             }else if indexPath.row > tokus &&                   // 特別損失
                       indexPath.row < tokusTotal {               // 特別損失合計
@@ -357,8 +492,14 @@ class TableViewControllerPL: UITableViewController, UIPrintInteractionController
                 cell.textLabel?.text = "    "+mid_category7[indexPath.row - (tokus + 1)].category
                 cell.textLabel?.font = UIFont.systemFont(ofSize: 15)
                 //ラベルを置いて金額を表示する
-                cell.label_amount.text = dataBaseManagerTaxonomy.getTotalOfTaxonomy(numberOfSettingsTaxonomy: mid_category7[indexPath.row - (tokus+1)].number)
-                cell.label_amount.font = UIFont.systemFont(ofSize: 15)
+                cell.label_amount.text = dataBaseManagerTaxonomy.getTotalOfTaxonomy(numberOfSettingsTaxonomy: mid_category7[indexPath.row - (tokus+1)].number, lastYear: false)
+                cell.label_amount.font = UIFont.systemFont(ofSize: 13)
+                if dataBaseManagerPeriod.checkSettingsPeriod() { // 前年度の会計帳簿の存在有無を確認
+                    cell.label_amount_previous.text = dataBaseManagerTaxonomy.getTotalOfTaxonomy(numberOfSettingsTaxonomy: mid_category7[indexPath.row - (tokus+1)].number, lastYear: true)
+                }else {
+                    cell.label_amount_previous.text = "-"
+                }
+                cell.label_amount_previous.font = UIFont.systemFont(ofSize: 13)
                 return cell
     // 税金　勘定科目を表示する必要はない
                 // 法人税、住民税及び事業税
@@ -382,7 +523,9 @@ class TableViewControllerPL: UITableViewController, UIPrintInteractionController
             }else{
                 if self.navigationController?.navigationBar.bounds.height != nil { //ナビゲーションバーが見えない状態で画面遷移をするとnilとなる　2020/07/12 22:45
                     // インセットを設定する　ステータスバーとナビゲーションバーより下からテーブルビューを配置するため
-                    scrollView.contentInset = UIEdgeInsets(top: +self.navigationController!.navigationBar.bounds.height+UIApplication.shared.statusBarFrame.height, left: 0, bottom: 0, right: 0)
+//                    scrollView.contentInset = UIEdgeInsets(top: +self.navigationController!.navigationBar.bounds.height+UIApplication.shared.statusBarFrame.height, left: 0, bottom: 0, right: 0)
+                    // インセットを設定する　ステータスバーとナビゲーションバーより下からテーブルビューを配置するため
+                    scrollView.contentInset = UIEdgeInsets(top: +(UIApplication.shared.statusBarFrame.height+self.navigationController!.navigationBar.bounds.height), left: 0, bottom: (self.tabBarController?.tabBar.frame.size.height)!, right: 0)
                 }
             }
         }

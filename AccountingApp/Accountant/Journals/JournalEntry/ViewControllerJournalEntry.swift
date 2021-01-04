@@ -18,7 +18,7 @@ class ViewControllerJournalEntry: UIViewController, UITextFieldDelegate {
     // テスト用広告ユニットID
     let TEST_ID = "ca-app-pub-3940256099942544/4411468910" // インタースティシャル
     // true:テスト
-    let AdMobTest:Bool = false
+    let AdMobTest:Bool = true
     @IBOutlet var interstitial: GADInterstitial!
     
     var categories :[String] = Array<String>()
@@ -40,7 +40,6 @@ class ViewControllerJournalEntry: UIViewController, UITextFieldDelegate {
         let initial = Initial()
         initial.initialize()
 
-        createDatePicker()
         createTextFieldForCategory()
         createTextFieldForAmount()
         createTextFieldForSmallwritting()
@@ -61,8 +60,10 @@ class ViewControllerJournalEntry: UIViewController, UITextFieldDelegate {
             formatter.dateFormat = "yyyy/MM/dd"     // 注意：　小文字のyにしなければならない
             
             if tappedIndexPath.row >= objects.count {
-                let objectss = dataBaseManager.getJournalAdjustingEntry(section: tappedIndexPath.section)
-                
+                // 設定操作
+                let dataBaseManagerSettingsOperating = DataBaseManagerSettingsOperating()
+                let object = dataBaseManagerSettingsOperating.getSettingsOperating()
+                let objectss = dataBaseManager.getJournalAdjustingEntry(section: tappedIndexPath.section, EnglishFromOfClosingTheLedger0: object!.EnglishFromOfClosingTheLedger0, EnglishFromOfClosingTheLedger1: object!.EnglishFromOfClosingTheLedger1) // 決算整理仕訳 損益振替仕訳 資本振替仕訳
                 primaryKey = objectss[tappedIndexPath.row-objects.count].number
                 datePicker.date = formatter.date(from: objectss[tappedIndexPath.row-objects.count].date)!// 注意：カンマの後にスペースがないとnilになる
                 TextField_category_debit.text = objectss[tappedIndexPath.row-objects.count].debit_category
@@ -109,6 +110,14 @@ class ViewControllerJournalEntry: UIViewController, UITextFieldDelegate {
                 }
             }
         }
+        // ダークモード対応
+        if (UITraitCollection.current.userInterfaceStyle == .dark) {
+            /* ダークモード時の処理 */
+            label_title.textColor = .white
+        } else {
+            /* ライトモード時の処理 */
+            label_title.textColor = UIColor.black
+        }
         //ここでUIKeyboardWillShowという名前の通知のイベントをオブザーバー登録をしている
 //        NotificationCenter.default.addObserver(self, selector: #selector(ViewControllerJournalEntry.keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
         //ここでUIKeyboardWillHideという名前の通知のイベントをオブザーバー登録をしている
@@ -116,6 +125,9 @@ class ViewControllerJournalEntry: UIViewController, UITextFieldDelegate {
     }
     // ビューが表示される直前に呼ばれる
     override func viewWillAppear(_ animated: Bool){
+        // 決算日設定機能　決算日を変更後に仕訳画面に反映させる
+        createDatePicker()
+
         // マネタイズ対応　注意：viewDidLoad()ではなく、viewWillAppear()に実装すること
         // GADBannerView プロパティを設定する
         if AdMobTest {
@@ -187,8 +199,8 @@ class ViewControllerJournalEntry: UIViewController, UITextFieldDelegate {
         timezone.locale = Locale(identifier: "en_US_POSIX")
 
         // 開いている会計帳簿の年度を取得
-        let dataBaseManagerPeriod = DataBaseManagerPeriod()
-        let object = dataBaseManagerPeriod.getSettingsPeriod()
+        let dataBaseManagerPeriod = DataBaseManagerSettingsPeriod()
+        let object = dataBaseManagerPeriod.getSettingsPeriod(lastYear: false)
         let fiscalYear = object.dataBaseJournals?.fiscalYear
         let nowStringYear = fiscalYear!.description                            //年度
         let nowStringPreviousYear = (fiscalYear! - 1).description              //年度
@@ -196,34 +208,66 @@ class ViewControllerJournalEntry: UIViewController, UITextFieldDelegate {
         
         let nowStringMonthDay = fff.string(from: now)                             //月日
         
+        // 設定決算日
+        let dataBaseManager = DataBaseManagerSettingsPeriod()
+        let theDayOfReckoning = dataBaseManager.getTheDayOfReckoning()
+
+        // 期間
         let dayOfStartInYear :Date   = fff.date(from: "01/01")!
-        let dayOfEndInPeriod :Date   = fff.date(from: "03/31")!
-        let dayOfStartInPeriod :Date = fff.date(from: "04/01")!
+        let dayOfEndInPeriod :Date   = fff.date(from: theDayOfReckoning)! // 決算日設定機能 注意：nowStringYearは、開始日の日付が存在するかどうかを確認するために記述した。閏年など
+        let modifiedDate = Calendar.current.date(byAdding: .day, value: 1, to: fff.date(from: theDayOfReckoning)!)! // 決算日設定機能　年度開始日は決算日の翌日に設定する
+        let dayOfStartInPeriod :Date = fff.date(from: fff.string(from: modifiedDate))!//"04/01")! // 決算日設定機能　年度開始日
         let dayOfEndInYear :Date     = fff.date(from: "12/31")!
 
-        //一月以降か
-        let Interval = (Calendar.current.dateComponents([.month], from: dayOfStartInYear, to: fff.date(from: nowStringMonthDay)! )).month
-        //三月三十一日未満か
-        let Interval1 = (Calendar.current.dateComponents([.month], from: dayOfEndInPeriod, to: fff.date(from: nowStringMonthDay)! )).month
-        //四月以降か
-        let Interval2 = (Calendar.current.dateComponents([.month], from: dayOfStartInPeriod, to: fff.date(from: nowStringMonthDay)! )).month
-        //十二月と同じ、もしくはそれ以前か
-        let Interval3 = (Calendar.current.dateComponents([.month], from: dayOfEndInYear, to: fff.date(from: nowStringMonthDay)! )).month
-        
-        if  Interval! >= 0  {
-            if  Interval1! <= 0  { //第四四半期の場合
-                datePicker.minimumDate = ffff2.date(from: (nowStringPreviousYear + "-04-01"))
-                datePicker.maximumDate = ffff2.date(from: (nowStringYear + "-03-31"))
+        // デイトピッカーの最大値と最小値を設定
+        if journalEntryType == "AdjustingAndClosingEntries" { // 決算整理仕訳の場合は日付を決算日に固定
+            if theDayOfReckoning == "12/31" { // 会計期間が年をまたがない場合
+                datePicker.minimumDate = ffff2.date(from: nowStringYear + "-\(timezone.string(from: fff.date(from: theDayOfReckoning)!))")
+                datePicker.maximumDate = ffff2.date(from: nowStringYear + "-\(timezone.string(from: fff.date(from: theDayOfReckoning)!))")
+            }else { // 会計期間が年をまたぐ場合
+                datePicker.minimumDate = ffff2.date(from: nowStringNextYear + "-\(timezone.string(from: fff.date(from: theDayOfReckoning)!))")
+                datePicker.maximumDate = ffff2.date(from: nowStringNextYear + "-\(timezone.string(from: fff.date(from: theDayOfReckoning)!))")
+            }
+        }else {
+            if theDayOfReckoning == "12/31" { // 会計期間が年をまたがない場合
+                datePicker.minimumDate = ffff2.date(from: nowStringYear + "-\(timezone.string(from: modifiedDate))")
+                datePicker.maximumDate = ffff2.date(from: nowStringYear + "-\(timezone.string(from: fff.date(from: theDayOfReckoning)!))")
+            }else { // 会計期間が年をまたぐ場合
+                //一月以降か
+                let Interval = (Calendar.current.dateComponents([.month], from: dayOfStartInYear, to: fff.date(from: nowStringMonthDay)! )).month
+                //三月三十一日未満か
+                let Interval1 = (Calendar.current.dateComponents([.month], from: dayOfEndInPeriod, to: fff.date(from: nowStringMonthDay)! )).month
                 //四月以降か
-            }else if Interval2! >= 0 { //第一四半期　以降
-                if Interval3! <= 0 { //第三四半期　以内
-                    datePicker.minimumDate = ffff2.date(from: nowStringYear + "-04-01")!    //04-02にすると04-01となる
-                    datePicker.maximumDate = ffff2.date(from: nowStringNextYear + "-03-31")!//04-01にすると03-31となる
+                let Interval2 = (Calendar.current.dateComponents([.month], from: dayOfStartInPeriod, to: fff.date(from: nowStringMonthDay)! )).month
+                //十二月と同じ、もしくはそれ以前か
+                let Interval3 = (Calendar.current.dateComponents([.month], from: dayOfEndInYear, to: fff.date(from: nowStringMonthDay)! )).month
+                
+                if  Interval! >= 0  {
+                    if  Interval1! <= 0  { //第四四半期の場合
+                        datePicker.minimumDate = Calendar.current.date(byAdding: .day, value: 1, to: fffff.date(from: theDayOfReckoning + "/" + nowStringPreviousYear + ", " + ffffff.string(from: now))!) // 決算日設定機能　注意：カンマの後にスペースがないとnilになる
+                        datePicker.maximumDate = ffff2.date(from: (nowStringYear + "-\(timezone.string(from: fff.date(from: theDayOfReckoning)!))"))
+                        //四月以降か
+                    }else if Interval2! >= 0 { //第一四半期　以降
+                        if Interval3! <= 0 { //第三四半期　以内
+                            datePicker.minimumDate = Calendar.current.date(byAdding: .day, value: 1, to: fffff.date(from: theDayOfReckoning + "/" + nowStringYear + ", " + ffffff.string(from: now))!) // 決算日設定機能　注意：カンマの後にスペースがないとnilになる 04-02にすると04-01となる
+                            datePicker.maximumDate = ffff2.date(from: nowStringNextYear + "-\(timezone.string(from: fff.date(from: theDayOfReckoning)!))") //04-01にすると03-31となる
+                        }
+                    }
                 }
             }
         }
         // ピッカーの初期値
-        datePicker.date = fffff.date(from: fff.string(from: now) + "/" + nowStringYear + ", " + ffffff.string(from: now))!// 注意：カンマの後にスペースがないとnilになる
+        if journalEntryType == "JournalEntriesFixing" { // 仕訳編集の場合
+            // 決算日設定機能　何もしない viewDidLoad()で値を設定している
+        }else if journalEntryType == "AdjustingAndClosingEntries" {
+            if theDayOfReckoning == "12/31" { // 会計期間が年をまたがない場合
+                datePicker.date = fffff.date(from: theDayOfReckoning + "/" + nowStringYear + ", " + ffffff.string(from: now))!// 注意：カンマの後にスペースがないとnilになる
+            }else {
+                datePicker.date = fffff.date(from: theDayOfReckoning + "/" + nowStringNextYear + ", " + ffffff.string(from: now))!// 注意：カンマの後にスペースがないとnilになる
+            }
+        }else {
+            datePicker.date = fffff.date(from: fff.string(from: now) + "/" + nowStringYear + ", " + ffffff.string(from: now))!// 注意：カンマの後にスペースがないとnilになる
+        }
         // 背景色
         datePicker.backgroundColor = .systemBackground
     }
@@ -489,7 +533,10 @@ class ViewControllerJournalEntry: UIViewController, UITextFieldDelegate {
             // 指定したスーパーセットの文字セットでないならfalseを返す
             resultForCharacter = allowedCharacters.isSuperset(of: characterSet)
         }else{  // 小書き
-            resultForCharacter = true
+            let notAllowedCharacters = CharacterSet(charactersIn:",") // 除外したい文字。絵文字はInterface BuilderのKeyboardTypeで除外してある。
+            let characterSet = CharacterSet(charactersIn: string)
+            // 指定したスーパーセットの文字セットならfalseを返す
+            resultForCharacter = !(notAllowedCharacters.isSuperset(of: characterSet))
         }
         // 入力チェック　文字数最大数を設定
         var maxLength: Int = 0 // 文字数最大値を定義
@@ -507,6 +554,10 @@ class ViewControllerJournalEntry: UIViewController, UITextFieldDelegate {
         let stringNumber = string.count
         // 最大文字数以上ならfalseを返す
         resultForLength = textFieldNumber + stringNumber <= maxLength
+        // 文字列が0文字の場合、backspaceキーが押下されたということなので一文字削除する
+        if(string == "") {
+            textField.deleteBackward()
+        }
         // 判定
         if !resultForCharacter { // 指定したスーパーセットの文字セットでないならfalseを返す
             return false
@@ -820,11 +871,13 @@ class ViewControllerJournalEntry: UIViewController, UITextFieldDelegate {
             TextField_category_debit.becomeFirstResponder()
         }
     }
+    
     @objc private func handleTimer(_ timer: Timer) {
         self.Label_Popup.text = "" //ポップアップの文字表示
         // ③ Timer のスケジューリングを破棄
         timer.invalidate()
     }
+    
     @IBAction func Button_cancel(_ sender: UIButton) {
         TextField_category_debit.text = ""
         TextField_category_credit.text = ""

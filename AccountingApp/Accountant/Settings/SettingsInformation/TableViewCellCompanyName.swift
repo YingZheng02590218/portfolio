@@ -30,7 +30,7 @@ class TableViewCellCompanyName: UITableViewCell, UITextViewDelegate { //プロ�
     }
 
     func textViewDidChange(_ textView: UITextView) {
-        print("")
+        print(textView.text)
     }
     
 //    func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
@@ -52,9 +52,38 @@ class TableViewCellCompanyName: UITableViewCell, UITextViewDelegate { //プロ�
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         // 入力を反映させたテキストを取得する
         let resultText: String = (textView.text! as NSString).replacingCharacters(in: range, with: text)
-        if resultText.count <= 30 { // 文字数制限
+        var resultForCharacter = false
+        var resultForLength = false
+        let notAllowedCharacters = CharacterSet(charactersIn:",\("\n")")//カンマ、改行
+        let characterSet = CharacterSet(charactersIn: text)
+        // 指定したスーパーセットの文字セットでないならfalseを返す
+        resultForCharacter = !(notAllowedCharacters.isSuperset(of: characterSet))
+        // 入力チェック　文字数最大数を設定
+        let maxLength: Int = 20 // 文字数最大値を定義
+        // textField内の文字数
+        let textFieldNumber = resultText.count    //todo
+        print(resultText.count)
+        // 入力された文字数
+        let stringNumber = text.count
+        print(text.count)
+        // 最大文字数以上ならfalseを返す
+        resultForLength = textFieldNumber + stringNumber < maxLength
+        // 文字列が0文字の場合、backspaceキーが押下されたということなので一文字削除する
+        if(text == "") {
+            self.textView_companyName.deleteBackward()
+        }
+        // 改行が入力された場合、リターンキーが押下されたということなのでキーボードを閉じる
+        if(text == "\n") {
+            textView.resignFirstResponder()
+        }
+        // 判定
+        if !resultForCharacter { // 指定したスーパーセットの文字セットならfalseを返す
+            return false
+        }else if !resultForLength { // 最大文字数以上ならfalseを返す
+            return false
+        }else {
             return true
         }
-        return false
     }
+    
 }

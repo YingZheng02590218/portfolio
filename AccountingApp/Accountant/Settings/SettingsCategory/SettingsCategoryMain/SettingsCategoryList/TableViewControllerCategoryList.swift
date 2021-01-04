@@ -19,7 +19,7 @@ class TableViewControllerCategoryList: UITableViewController {
     // テスト用広告ユニットID
     let TEST_ID = "ca-app-pub-3940256099942544/2934735716"
     // true:テスト
-    let AdMobTest:Bool = false
+    let AdMobTest:Bool = true
     @IBOutlet var gADBannerView: GADBannerView!
 
 
@@ -281,6 +281,36 @@ class TableViewControllerCategoryList: UITableViewController {
             tableViewControllerSettingsCategoryDetail.numberOfAccount = objects[indexPath.row].number // セルに表示した勘定科目の連番を取得
             // セルの選択を解除
             tableView.deselectRow(at: indexPath, animated: true)
+        }
+    }
+//    // セル選択不可
+//    override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
+//        // 編集モードの場合　は押下できないのでこの処理は通らない
+//        if tableView.isEditing {
+//            return indexPath
+//        }else {
+//            // 選択不可にしたい場合は"nil"を返す
+//            return nil
+//        }
+//    }
+    // 削除機能 セルを左へスワイプ
+    override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        // 編集モードの場合
+        if tableView.isEditing {
+            // スタイルには、normal と　destructive がある
+            let action = UIContextualAction(style: .destructive, title: "削除") { (action, view, completionHandler) in
+                // なんか処理
+                // 確認のポップアップを表示したい
+                self.showPopover(indexPath: indexPath)
+                completionHandler(true) // 処理成功時はtrue/失敗時はfalseを設定する
+            }
+            action.image = UIImage(systemName: "trash.fill") // 画像設定（タイトルは非表示になる）
+            let configuration = UISwipeActionsConfiguration(actions: [action])
+            return configuration
+        }else { // 編集モードではない状態でセルをスワイプした場合
+            let configuration = UISwipeActionsConfiguration(actions: [])
+            configuration.performsFirstActionWithFullSwipe = false
+            return configuration
         }
     }
 }
